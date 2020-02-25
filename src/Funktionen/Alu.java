@@ -1,4 +1,6 @@
-package DateiVerarbeitung;
+package Funktionen;
+
+import Speicher.Speicher;
 
 public class Alu {
 		//Funktion zum bilden eines Zweierkomplements
@@ -37,5 +39,19 @@ public class Alu {
 	 
 	        return value;
 	    }
+	
+	
+	public static int ALU(int p1, int d, int f, String op) {
+		return ALU(p1, Speicher.getWReg(), d, f, op);
 	}
-}
+	
+	
+	public static int twoComplement(int value) {
+		value = value ^ 0b11111111;
+		value++;
+		value = value & 0x00FF;
+		return value;
+	}	
+	
+	}
+

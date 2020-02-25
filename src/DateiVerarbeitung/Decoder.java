@@ -1,3 +1,5 @@
+package DateiVerarbeitung;
+import Speicher.Speicher;
 
 public class Decoder
 {
@@ -18,7 +20,7 @@ public class Decoder
 	
 	
     public static int decodeParameter(int index, String param) {
-        int[] programmSpeicher = Speicher.getProgrammSpeicher(); 
+        int[] programmSpeicher = Speicher.getProgrammspeicher(); 
         int command = programmSpeicher[index]; // Hex Code aus dem ProgrammSpeicher
  
         switch (decodeCommand(index)) {
@@ -87,7 +89,7 @@ public class Decoder
     public static String decodeCommand(int index)
 	{
 
-		int[]programmSpeicher = Speicher.getProgrammSpeicher(); 
+		int[]programmSpeicher = Speicher.getProgrammspeicher(); 
 		int command = programmSpeicher[index];
 		
 		//Add a way to see which bitMask methode needs to be used
@@ -203,14 +205,6 @@ public class Decoder
 		
 		
 
-	public static void main(String[] args)
-	{
-		
-		int bit = 0b00_0111_0000_0000;
-		
-		//System.out.println(test( bit));
-		
-		
-	}
+	
 
 }
