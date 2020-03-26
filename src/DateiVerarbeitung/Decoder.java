@@ -92,7 +92,7 @@ public class Decoder
 		int[]programmSpeicher = Speicher.getProgrammspeicher(); 
 		int command = programmSpeicher[index];
 		
-		//Add a way to see which bitMask methode needs to be used
+		
 		
 		if((command & MASK_NOP) == 0b00000000000000) {
 			return "NOP";

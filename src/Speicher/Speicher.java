@@ -124,7 +124,27 @@ public class Speicher {
 		}
 	}
 	
+	public static void setBankFlag()
+	{
+		bankFlag = statusRegister[2];
+	}
+	
+	
+	public static void setPC(int value)
+	{
+		PC = value;
+		reloadPCL();
+	}
+	
 
+	public static void setWReg(int value)
+	{
+		wReg = value;
+	}
+
+	
+	
+	
 	public static void reloadArrayRegister(String command) {
 
 		int[] data = new int[8];
@@ -176,7 +196,7 @@ public class Speicher {
 			System.out.println("Fehler: Falscher Befehl");
 		}else {
 			for(int i = 0;i < masks_status.length;i++) {
-				data[i] = (FileRegister.getValue(bank, adresse) & masks_status[i]);
+				data[i] = (FileRegister.getBankValue(bank, adresse) & masks_status[i]);
 				
 				if(data[i] != 0) {
 					data[i] = data[i] / data[i];
@@ -223,7 +243,7 @@ public class Speicher {
 	public static void reloadPCL()
 	{
 		PCL = (PC & return_mask);
-		FileRegister.setData(2, PCL);
+		FileRegister.setDataInBank(2, PCL);
 	}
 	
 	public static void reset()
@@ -248,8 +268,31 @@ public class Speicher {
 		}
 
 		//Reset.POR();
-		//reload();
+		reload();
 	}
+	
+	public static void reload()
+	{
+		reloadArray();
+		
+		reloadPCL();
+		PCLATH = FileRegister.getBankValue(0, 10);
+		
+	}
+	
+	public static void reloadArray() {
+		reloadArrayRegister("status");
+		setBankFlag();
+		
+		reloadArrayRegister("option");
+		reloadArrayRegister("intcon");
+		
+		reloadArrayRegister("tristPinA");
+		reloadArrayRegister("tristPinB");
+		reloadArrayRegister("portPinA");
+		reloadArrayRegister("portPinB");
+	}
+	
 	
 	
 }

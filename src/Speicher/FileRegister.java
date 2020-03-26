@@ -11,12 +11,12 @@ public class FileRegister {
 
 	// Aus den zwei Bänken wird ein zweidimensionales Array welches den RAM-Speicher
 	// darstellt
-	public static int[][] getFileReg() {
+	public static int[][] getFReg() {
 		int[][] fileReg = { bank0, bank1 };
 		return fileReg;
 	}
 
-	public static int getValue(int bank, int index) {
+	public static int getBankValue(int bank, int index) {
 		int value;
 		if (bank == 0) {
 			value = bank0[index];
@@ -31,7 +31,7 @@ public class FileRegister {
 		return value;
 	}
 	
-	public static void setData(int bank,int index,int data) {
+	public static void setDataInBank(int bank,int index,int data) {
 		if(index < 0x50) {
 			if (bank == 0) {
 				bank0[index] = data;
@@ -46,22 +46,22 @@ public class FileRegister {
 		}
 		
 		else {
-			System.out.println("Adresse kann nicht beschrieben werden. Adresse übersteigt Special Function Register & General Purpose Regiser");
+			System.out.println("Adresse kann nicht beschrieben werden. Adresse übersteigt Special Function Register & General Purpose Register");
 		}
 		
 		if (index == 2 && (Speicher.getPCL() != data)) {
-			int pclath = FileRegister.getValue(0, 10);
+			int pclath = FileRegister.getBankValue(0, 10);
 
 			pclath = pclath << 8;
 
 			int pc = pclath | data;
-			Speicher.setPC(pc); // Da der PC nach dem Befehl nochmal erhÃ¶ht wird, rechnen wir hier -1
+			Speicher.setPC(pc); 
 		}
 	}
 	
-	public static void setData(int index,int data) {
-		setData(0,index,data);
-		setData(1,index,data);
+	public static void setDataInBank(int index,int data) {
+		setDataInBank(0,index,data);
+		setDataInBank(1,index,data);
 	}
 
 }
