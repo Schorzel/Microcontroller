@@ -291,5 +291,10 @@ public class Functions {
 		}
 		Speicher.reload();
 	}
+	
+	public static boolean isSleep() {
+		//TODO
+		return false;
+	}
 
 }
