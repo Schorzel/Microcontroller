@@ -25,7 +25,7 @@ public class FileRegister {
 			value = bank1[index];
 
 		} else {
-			System.out.println("Bank not found");
+			System.out.println("Bank nicht gefunden");
 			value = 0;
 		}
 		return value;
@@ -40,7 +40,7 @@ public class FileRegister {
 				bank1[index] = data;
 
 			} else {
-				System.out.println("Bank not found");
+				System.out.println("Bank nicht gefunden");
 				
 			}
 		}

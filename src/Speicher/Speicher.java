@@ -20,7 +20,7 @@ public class Speicher {
 	// Flags & Registers
 	private static int PCL;
 	private static int PCLATH;
-	private static int PC;
+	private static int PC; //Programmzähler
 	private static int wReg;
 	private static int bankFlag;
 

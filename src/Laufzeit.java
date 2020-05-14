@@ -1,4 +1,5 @@
 
+
 public class Laufzeit {
 
 	private static int laufzeitzaehler;
@@ -22,8 +23,13 @@ public class Laufzeit {
 		Laufzeit.frequenz = frequenz;
 	}
 
-	public static void increaseRuntimecounter() {
+	public static void increaseLaufzeitzaehler() {
 		laufzeitzaehler += 4 / frequenz;
+		
+		if (Timer.getT0CS() == 0) {
+			Timer.incTimer();	
+		}
+		
 	}
 
 }

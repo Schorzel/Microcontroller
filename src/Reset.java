@@ -63,4 +63,20 @@ public class Reset {
 		option = Speicher.getOptionReg();
 		intcon = Speicher.getIntconReg();
 	}
+	
+	public static void WDTReset() {
+		
+		if(Functions.isSleep()) {
+			Functions.setSleep(false);
+			sleepReset();
+			FileRegister.setDataInBank(3, FileRegister.getBankValue(0, 3) & 0b11100111 );
+			Speicher.setPC(Speicher.getPC() + 1);
+		}else {
+			normalReset();
+			FileRegister.setDataInBank(3, (FileRegister.getBankValue(0, 3) & 0b00000111) | 1 << 4)  ;
+			Speicher.setPC(0);
+		}
+		
+		
+	}
 }

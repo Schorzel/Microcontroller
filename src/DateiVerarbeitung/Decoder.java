@@ -25,7 +25,7 @@ public class Decoder
  
         switch (decodeCommand(index)) {
          
-        // Commands mit Parameter 'd', 'f'
+        // Befehle mit Parameter 'd', 'f'
         case "ADDWF":
         case "ANDWF":
         case "COMF":
@@ -49,7 +49,7 @@ public class Decoder
             }
             break;
              
-        // Commands mit Parameter 'b', 'f'
+        // Befehle mit Parameter 'b', 'f'
         case "BCF":
         case "BSF":
         case "BTFSC":
@@ -61,7 +61,7 @@ public class Decoder
             }
             break;
              
-        // Commands mit Parameter 'k' (last 8 bits)
+        // Befehle mit Parameter 'k' (last 8 bits)
         case "ADDLW":
         case "ANDLW":
         case "IORLW":
@@ -72,12 +72,12 @@ public class Decoder
         case "XORLW":
             return (command & (MASK_FIRST_7 ^ MASK_7));
              
-        // Commands mit Parameter 'k' (last 11 bits)
+        // Befehle mit Parameter 'k' (last 11 bits)
         case "CALL":
         case "GOTO":
             return (command & MASK_PARAM_k_long);
         }
-        return 0; // Error or NOP Befehl executed
+        return 0; // Fehler oder NOP
     }
     
     

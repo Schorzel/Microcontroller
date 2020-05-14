@@ -25,7 +25,19 @@ public class Functions {
 	private static int d;
 	private static int f;
 	private static int k;
+	
+	
+	public static boolean isSleep() {
+		return sleep;
+	}
+	
+	public static void setSleep(boolean sleep) {
+		Functions.sleep = sleep;
+	}
+	
 
+	//Byte-oriented Operations
+	
 	public static void ADDWF() {
 		Flags.checkFlagDC(w, fileReg[bankFlag][f]);
 		value = Alu.ALU(fileReg[bankFlag][f], d, f, "+");
@@ -168,6 +180,8 @@ public class Functions {
 		Flags.checkFlagZ(value);
 	}
 
+	//Bit-Oriented Operations
+	
 	public static void BCF() {
 
 		value = fileReg[bankFlag][f];
@@ -207,6 +221,8 @@ public class Functions {
 
 		}
 	}
+	
+	//Literal und Control Operations
 
 	public static void ADDLW() {
 
@@ -253,7 +269,7 @@ public class Functions {
 	
 	//RETURN
 	
-	//SLEEP ME NOW PLS
+	//SLEEP
 	
 	public static void SUBLW() {
 		Flags.checkFlagDC(k, Alu.zweierKomp(w));
@@ -267,6 +283,8 @@ public class Functions {
 		value = Alu.ALU(k, 0, 0, "^");
 		Flags.checkFlagZ(value);
 	}
+	
+
 	
 
 	protected static void saveData(int d, int f, int value) {
@@ -292,9 +310,6 @@ public class Functions {
 		Speicher.reload();
 	}
 	
-	public static boolean isSleep() {
-		//TODO
-		return false;
-	}
+	
 
 }
