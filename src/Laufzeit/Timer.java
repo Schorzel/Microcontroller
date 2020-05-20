@@ -1,3 +1,4 @@
+package Laufzeit;
 import Speicher.FileRegister;
 import Speicher.Speicher;
 
@@ -12,6 +13,8 @@ public class Timer {
 
 	public Timer() {
 		timer = FileRegister.getBankValue(0, 1);
+		timerMax = 0;
+		vorteilsTimer = 0;
 	}
 
 	
@@ -26,9 +29,14 @@ public class Timer {
 	
 	
 	public static int getT0CS() {
+		setT0CS();
 		return T0CS;
 	}
 
+	
+	public static int getVorteilsTimer() {
+		return vorteilsTimer;
+	}
 	
 	public static void setTimer(int timer) {
 		Timer.timer = timer;
@@ -56,7 +64,12 @@ public class Timer {
 	}
 
 	public static void incTimer() {
-
+		setPSA();
+		setPRS();
+		
+		if (psa == 1) {
+			prs = 1;
+		}
 
 		
 		vorteilsTimer += 4 / Laufzeit.getFrequenz();

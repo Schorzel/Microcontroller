@@ -1,3 +1,4 @@
+package Laufzeit;
 import Funktionen.Functions;
 import Speicher.FileRegister;
 import Speicher.Speicher;
@@ -65,6 +66,7 @@ public class Reset {
 	}
 	
 	public static void WDTReset() {
+		WatchDogTimer.resetTimer();
 		
 		if(Functions.isSleep()) {
 			Functions.setSleep(false);
@@ -78,5 +80,19 @@ public class Reset {
 		}
 		
 		
+	}
+	
+	public static void Interrupt() {
+		sleepReset();
+		if (Functions.isSleep()) {
+			Functions.setSleep(false);
+			if ((FileRegister.getBankValue(0, 11) & 0b10000000) == 0b10000000) {
+				Speicher.setPC(4);
+			} else {
+				Speicher.setPC(Speicher.getPC() + 1);
+			}
+
+			FileRegister.setDataInBank(3, (FileRegister.getBankValue(0, 3) & 0b11100111) | 0b00010000); // Status
+		}
 	}
 }

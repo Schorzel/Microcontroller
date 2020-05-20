@@ -9,6 +9,16 @@ public class FileRegister {
 	private static int[] bank0 = new int[128];
 	private static int[] bank1 = new int[128];
 
+		
+	public FileRegister() {
+		for (int i = 0; i < bank0.length; i++) {
+			bank0[i] = 0;
+			bank1[i] = 0;
+		}
+	}
+	
+		
+	
 	// Aus den zwei Bänken wird ein zweidimensionales Array welches den RAM-Speicher
 	// darstellt
 	public static int[][] getFReg() {
@@ -57,6 +67,7 @@ public class FileRegister {
 			int pc = pclath | data;
 			Speicher.setPC(pc); 
 		}
+		Speicher.reloadArray();
 	}
 	
 	public static void setDataInBank(int index,int data) {

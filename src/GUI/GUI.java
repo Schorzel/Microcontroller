@@ -10,15 +10,16 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+
 import javax.swing.*;
 
 import Speicher.Speicher;
 
 public class GUI  {
 
-	private static String datei = "C:\\Users\\Super\\git\\Microcontroller\\src\\LST_Files\\TPicSim1.LST";
+	String datei = "C:\\Users\\Super\\git\\Microcontroller\\src\\LST_Files\\TPicSim1.LST";
 	
-	JFrame frame = new JFrame("PIC 16F84");
+	JFrame frame;
 	
 	JPanel buttonPanel = new JPanel();
 	JPanel pinAPanel = new JPanel();
@@ -27,8 +28,12 @@ public class GUI  {
 	JLabel watchDogLabel = new JLabel();
 	JPanel watchDogPanel = new JPanel();
 	
+	//Speicher speicher = new Speicher();
 	
 	
+	int[] statusReg = Speicher.getStatusRegister();
+	int[] optionReg = Speicher.getOptionReg();
+	int[] intconReg = Speicher.getIntconReg();
 	
 	
 	//JRadioButton WatchDog
@@ -77,15 +82,17 @@ public class GUI  {
 	JButton reset = new JButton("Reset");
 	
 	
+	
+	
 
 	// Labels
 	
 	//Pins
-	JLabel portAText = new JLabel("Port A");
-	JLabel portBText = new JLabel("Port B");
+	static JLabel portAText = new JLabel("Port A");
+	static JLabel portBText = new JLabel("Port B");
 	
-	JLabel portATextIO = new JLabel("Port A IO");
-	JLabel portBTextIO = new JLabel("Port B IO");
+	static JLabel portATextIO = new JLabel("Port A IO");
+	static JLabel portBTextIO = new JLabel("Port B IO");
 
 	
 	
@@ -103,14 +110,14 @@ public class GUI  {
 	protected JLabel DCText = new JLabel("DC");
 	protected JLabel CText = new JLabel("C");
 
-	protected JLabel IRPNumberText = new JLabel("0");
-	protected JLabel RP1NumberText = new JLabel("0");
-	protected JLabel RP0NumberText = new JLabel("0");
-	protected JLabel TONumberText = new JLabel("0");
-	protected JLabel PDNumberText = new JLabel("0");
-	protected JLabel ZNumberText = new JLabel("0");
-	protected JLabel DCNumberText = new JLabel("0");
-	protected JLabel CNumberText = new JLabel("0");
+	protected JLabel IRPNumberText = new JLabel(Integer.toString(statusReg[0]));
+	protected JLabel RP1NumberText = new JLabel(Integer.toString(statusReg[1]));
+	protected JLabel RP0NumberText = new JLabel(Integer.toString(statusReg[2]));
+	protected JLabel TONumberText = new JLabel(Integer.toString(statusReg[3]));
+	protected JLabel PDNumberText = new JLabel(Integer.toString(statusReg[4]));
+	protected JLabel ZNumberText = new JLabel(Integer.toString(statusReg[5]));
+	protected JLabel DCNumberText = new JLabel(Integer.toString(statusReg[6]));
+	protected JLabel CNumberText = new JLabel(Integer.toString(statusReg[7]));
 
 	protected JLabel RPUText = new JLabel("RPU");
 	protected JLabel IEGText = new JLabel("IEG");
@@ -121,14 +128,14 @@ public class GUI  {
 	protected JLabel PS1Text = new JLabel("PS1");
 	protected JLabel PS0Text = new JLabel("PS0");
 
-	protected JLabel RPUNumberText = new JLabel("0");
-	protected JLabel IEGNumberText = new JLabel("0");
-	protected JLabel TCSNumberText = new JLabel("0");
-	protected JLabel TSENumberText = new JLabel("0");
-	protected JLabel PSANumberText = new JLabel("0");
-	protected JLabel PS2NumberText = new JLabel("0");
-	protected JLabel PS1NumberText = new JLabel("0");
-	protected JLabel PS0NumberText = new JLabel("0");
+	protected JLabel RPUNumberText = new JLabel(Integer.toString(optionReg[0]));
+	protected JLabel IEGNumberText = new JLabel(Integer.toString(optionReg[1]));
+	protected JLabel TCSNumberText = new JLabel(Integer.toString(optionReg[2]));
+	protected JLabel TSENumberText = new JLabel(Integer.toString(optionReg[3]));
+	protected JLabel PSANumberText = new JLabel(Integer.toString(optionReg[4]));
+	protected JLabel PS2NumberText = new JLabel(Integer.toString(optionReg[5]));
+	protected JLabel PS1NumberText = new JLabel(Integer.toString(optionReg[6]));
+	protected JLabel PS0NumberText = new JLabel(Integer.toString(optionReg[7]));
 
 	protected JLabel GIEText = new JLabel("GIE");
 	protected JLabel EIEText = new JLabel("EIE");
@@ -139,14 +146,14 @@ public class GUI  {
 	protected JLabel IFText = new JLabel("IF");
 	protected JLabel RIFText = new JLabel("RIF");
 
-	protected JLabel GIENumberText = new JLabel("0");
-	protected JLabel EIENumberText = new JLabel("0");
-	protected JLabel TIENumberText = new JLabel("0");
-	protected JLabel IENumberText = new JLabel("0");
-	protected JLabel RIENumberText = new JLabel("0");
-	protected JLabel TIFNumberText = new JLabel("0");
-	protected JLabel IFNumberText = new JLabel("0");
-	protected JLabel RIFNumberText = new JLabel("0");
+	protected JLabel GIENumberText = new JLabel(Integer.toString(intconReg[0]));
+	protected JLabel EIENumberText = new JLabel(Integer.toString(intconReg[1]));
+	protected JLabel TIENumberText = new JLabel(Integer.toString(intconReg[2]));
+	protected JLabel IENumberText = new JLabel(Integer.toString(intconReg[3]));
+	protected JLabel RIENumberText = new JLabel(Integer.toString(intconReg[4]));
+	protected JLabel TIFNumberText = new JLabel(Integer.toString(intconReg[5]));
+	protected JLabel IFNumberText = new JLabel(Integer.toString(intconReg[6]));
+	protected JLabel RIFNumberText = new JLabel(Integer.toString(intconReg[7]));
 	
 
 	private static String[][] loadFile(String datei) { // Datei ins programm laden/einlesen
@@ -205,15 +212,23 @@ public class GUI  {
 	public GUI(){
 		
 		
-		new Bits();
+	//	frame();		
+		
+		frame = new JFrame("Pic");
+	
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		frame.setSize(1000, 700);
+		
+		
+		JTable lstFile;
 		
 	/*	//Action listener Test
 		start.addActionListener(this);
 		stop.addActionListener(this);
 		reset.addActionListener(this);
 */
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(1000, 700);
+		
 
 	
 		
@@ -223,11 +238,15 @@ public class GUI  {
 		// Column Names
 		String[] columnNames = { "Adresse", "Code", "Zeile", "Start/Ende", "Kommentar" };
 
-		JTable lstFile = new JTable(loadFile(datei), columnNames);
+		lstFile = new JTable(loadFile(datei), columnNames);
 
-		// lstFile.setBounds(20,200,700,600);
+		//lstFile.setBounds(0,0,700,600);
 
+		
+		
 		JScrollPane lstFileSP = new JScrollPane(lstFile);
+		
+		
 
 		lstFile.getColumnModel().getColumn(0).setPreferredWidth(55);
 		lstFile.getColumnModel().getColumn(1).setPreferredWidth(50);
@@ -238,24 +257,10 @@ public class GUI  {
 		lstFile.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
 		// Adding
-		frame.add(buttonPanel);
-		frame.add(pinAPanel);
-		frame.add(pinBPanel);
-		frame.add(portAText);
-		frame.add(portBText);
-		frame.add(portATextIO);
-		frame.add(portBTextIO);
-		
-		frame.add(lstFileSP);
-		frame.add(watchDogLabel);
-		frame.add(watchDogPanel);
-		
-		
-		
-		
 		
 
-		lstFileSP.setBounds(20, 200, 700, 400);
+		//lstFileSP.add(lstFile);
+		
 		
 		watchDogPanel.add(watchDogOFF);
 		watchDogPanel.add(watchDogON);
@@ -298,6 +303,68 @@ public class GUI  {
 		pinBPanel.add(pinRB6IO);
 		pinBPanel.add(pinRB7IO);
 
+		
+		//Adding to bitpanel
+		bitPanel.add(statusText);
+		bitPanel.add(optionText);
+		bitPanel.add(intconText);
+
+		bitPanel.add(IRPText);
+		bitPanel.add(RP1Text);
+		bitPanel.add(RP0Text);
+		bitPanel.add(TOText);
+		bitPanel.add(PDText);
+		bitPanel.add(ZText);
+		bitPanel.add(DCText);
+		bitPanel.add(CText);
+
+		bitPanel.add(IRPNumberText);
+		bitPanel.add(RP1NumberText);
+		bitPanel.add(RP0NumberText);
+		bitPanel.add(TONumberText);
+		bitPanel.add(PDNumberText);
+		bitPanel.add(ZNumberText);
+		bitPanel.add(DCNumberText);
+		bitPanel.add(CNumberText);
+
+		bitPanel.add(RPUText);
+		bitPanel.add(IEGText);
+		bitPanel.add(TCSText);
+		bitPanel.add(TSEText);
+		bitPanel.add(PSAText);
+		bitPanel.add(PS2Text);
+		bitPanel.add(PS1Text);
+		bitPanel.add(PS0Text);
+
+		bitPanel.add(RPUNumberText);
+		bitPanel.add(IEGNumberText);
+		bitPanel.add(TCSNumberText);
+		bitPanel.add(TSENumberText);
+		bitPanel.add(PSANumberText);
+		bitPanel.add(PS2NumberText);
+		bitPanel.add(PS1NumberText);
+		bitPanel.add(PS0NumberText);
+
+		bitPanel.add(GIEText);
+		bitPanel.add(EIEText);
+		bitPanel.add(TIEText);
+		bitPanel.add(IEText);
+		bitPanel.add(RIEText);
+		bitPanel.add(TIFText);
+		bitPanel.add(IFText);
+		bitPanel.add(RIFText);
+
+		bitPanel.add(GIENumberText);
+		bitPanel.add(EIENumberText);
+		bitPanel.add(TIENumberText);
+		bitPanel.add(IENumberText);
+		bitPanel.add(RIENumberText);
+		bitPanel.add(TIFNumberText);
+		bitPanel.add(IFNumberText);
+		bitPanel.add(RIFNumberText);
+		
+	
+		
 		
 		
 		// Position and Size
@@ -347,39 +414,118 @@ public class GUI  {
 		pinRB6IO.setBounds(60, 120, 50, 20);
 		pinRB7IO.setBounds(60, 140, 50, 20);
 
-	
+		statusText.setBounds(20, 10, 50, 20);
+		optionText.setBounds(20, 60, 50, 20);
+		intconText.setBounds(20, 110, 50, 20);
+
+		IRPText.setBounds(70, 10, 30, 20);
+		RP1Text.setBounds(100, 10, 30, 20);
+		RP0Text.setBounds(130, 10, 30, 20);
+		TOText.setBounds(160, 10, 30, 20);
+		PDText.setBounds(190, 10, 30, 20);
+		ZText.setBounds(220, 10, 30, 20);
+		DCText.setBounds(250, 10, 30, 20);
+		CText.setBounds(280, 10, 30, 20);
+
+		IRPNumberText.setBounds(70, 30, 30, 20);
+		RP1NumberText.setBounds(100, 30, 30, 20);
+		RP0NumberText.setBounds(130, 30, 30, 20);
+		TONumberText.setBounds(160, 30, 30, 20);
+		PDNumberText.setBounds(190, 30, 30, 20);
+		ZNumberText.setBounds(220, 30, 30, 20);
+		DCNumberText.setBounds(250, 30, 30, 20);
+		CNumberText.setBounds(280, 30, 30, 20);
+
+		RPUText.setBounds(70, 60, 30, 20);
+		IEGText.setBounds(100, 60, 30, 20);
+		TCSText.setBounds(130, 60, 30, 20);
+		TSEText.setBounds(160, 60, 30, 20);
+		PSAText.setBounds(190, 60, 30, 20);
+		PS2Text.setBounds(220, 60, 30, 20);
+		PS1Text.setBounds(250, 60, 30, 20);
+		PS0Text.setBounds(280, 60, 30, 20);
+
+		RPUNumberText.setBounds(70, 80, 30, 20);
+		IEGNumberText.setBounds(100, 80, 30, 20);
+		TCSNumberText.setBounds(130, 80, 30, 20);
+		TSENumberText.setBounds(160, 80, 30, 20);
+		PSANumberText.setBounds(190, 80, 30, 20);
+		PS2NumberText.setBounds(220, 80, 30, 20);
+		PS1NumberText.setBounds(250, 80, 30, 20);
+		PS0NumberText.setBounds(280, 80, 30, 20);
+
+		GIEText.setBounds(70, 110, 30, 20);
+		EIEText.setBounds(100, 110, 30, 20);
+		TIEText.setBounds(130, 110, 30, 20);
+		IEText.setBounds(160, 110, 30, 20);
+		RIEText.setBounds(190, 110, 30, 20);
+		TIFText.setBounds(220, 110, 30, 20);
+		IFText.setBounds(250, 110, 30, 20);
+		RIFText.setBounds(280, 110, 30, 20);
+
+		GIENumberText.setBounds(70, 130, 30, 20);
+		EIENumberText.setBounds(100, 130, 30, 20);
+		TIENumberText.setBounds(130, 130, 30, 20);
+		IENumberText.setBounds(160, 130, 30, 20);
+		RIENumberText.setBounds(190, 130, 30, 20);
+		TIFNumberText.setBounds(220, 130, 30, 20);
+		IFNumberText.setBounds(250, 130, 30, 20);
+		RIFNumberText.setBounds(280, 130, 30, 20);
+		
+		bitPanel.setBounds(400, 30, 310, 150);
 		
 		//RadioButton WatchDog
 		watchDogON.setBounds(0, 25, 50, 25);
 		watchDogOFF.setBounds(50, 25, 50, 25);
-		watchDogLabel.setBounds(15, 0, 100, 20);
+		watchDogLabel.setBounds(770, 50, 100, 20);
 		watchDogLabel.setText("WatchDog");
 		
 		watchDog.add(watchDogON);
 		watchDog.add(watchDogOFF);
 		
+		lstFileSP.setBounds(20, 200, 700, 400);
 
-
+		
 		// Color
 		start.setBackground(new Color(0, 120, 0));
 		stop.setBackground(new Color(255, 0, 0));
 		reset.setBackground(new Color(0, 255, 255));
 		
+		bitPanel.setBorder(BorderFactory.createTitledBorder("Bit"));
 		
 
-		// Layout
-		watchDogPanel.setLayout(null);
+
+	        
+		frame.add(buttonPanel);
+		frame.add(pinAPanel);
+		frame.add(pinBPanel);
+		frame.add(portAText);
+		frame.add(portBText);
+		frame.add(portATextIO);
+		frame.add(portBTextIO);
+		frame.add(lstFileSP);
+		frame.add(watchDogLabel);
+		frame.add(watchDogPanel);
+		frame.add(bitPanel);
+
 		
+		// Layout
+	
+		watchDogPanel.setLayout(null);
+		bitPanel.setLayout(null);
 		buttonPanel.setLayout(null);
 		pinAPanel.setLayout(null);
 		pinBPanel.setLayout(null);
 		frame.setLayout(null);
 		frame.setVisible(true);
+		
+	
+
+		
 	}
 
 
 
-/*	@Override
 	public void actionPerformed(ActionEvent ae) {
 		 if(ae.getSource() == this.start){
 	            watchDogLabel.setText(("Button 1 wurde betätigt"));
@@ -392,8 +538,9 @@ public class GUI  {
 	        }
 		
 	}
-	*/
 	
+	
+
 	public static void main(String[] args) {
 		new GUI();
 

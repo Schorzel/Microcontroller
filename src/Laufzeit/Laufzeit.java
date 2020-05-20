@@ -1,3 +1,4 @@
+package Laufzeit;
 
 
 public class Laufzeit {
@@ -25,6 +26,8 @@ public class Laufzeit {
 
 	public static void increaseLaufzeitzaehler() {
 		laufzeitzaehler += 4 / frequenz;
+		WatchDogTimer.increaseTimer();
+		
 		
 		if (Timer.getT0CS() == 0) {
 			Timer.incTimer();	

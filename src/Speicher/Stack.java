@@ -6,7 +6,12 @@ public class Stack {
 	private static int stackPointer;
 	
 	
-
+	public Stack() {
+		for (int i = 0; i < stack.length; i++) {
+			stack[i] = 0;
+		}
+		stackPointer = 0;
+	}
 	
 	
 	public static int getStackValue() {

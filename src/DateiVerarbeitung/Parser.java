@@ -1,9 +1,6 @@
 package DateiVerarbeitung;
 import Speicher.Speicher;
-
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,46 +8,44 @@ import java.io.IOException;
 
 
 
-
 public class Parser {
-	
-	private String datei;
-	
-	private static void loadFile(String datei) { //Datei ins programm laden/einlesen
-		File file = new File(datei);
-	
-	
-	if(!file.canRead()|| !file.isFile()) { //überprüfen ob Datei exisitiert und gelesen werden kann
-		return;
+	private String file;
+
+	public String getFile() {
+		return file;
 	}
+	
+	public void setFile(String file) {
+		this.file = file;
+	}
+
+	public void read() {
+		Speicher.reset();
+		String line;
+		
+		
 		try {
-			BufferedReader buffer = new BufferedReader(new FileReader(datei));
-			String zeile=null;
-			while((zeile =buffer.readLine())!= null) {
-				if(zeile.substring(0,1)==" ") { //Überspringe Zeile wenn sie leer ist
+			FileReader fileReader = new FileReader(file);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			
+			while ((line = bufferedReader.readLine()) != null) {
+				
+				if (line.substring(0, 1).equals(" ")) { // Wenn die erste Stelle ein Leerzeichen ist ï¿½berspringe die Zeile
+					
 					continue;
+				} else {
+					
+					int adress = Integer.parseInt(line.substring(1, 4), 16); // Adresse auslesen und speichern.
+					Speicher.setProgrammspeicher(adress, Integer.parseInt(line.substring(5, 9), 16)); // Befehlscode auslesen und speichern beim index (adresse)
 				}
-				else {
-					int befehlsAdresse = Integer.parseInt(zeile.substring(1,4),16); //Befehlsadresse in Programmspeicher auslesen
-					int befehlsCode = Integer.parseInt(zeile.substring(6,9),16); //Befehlscode auslesen
-					Speicher.setProgrammspeicher(befehlsAdresse,befehlsCode); //mit Befehlsadresse und Befehlscode Befehl im Speicher setten
-				}
-				}
-				buffer.close();
-				}
-		
-			catch(FileNotFoundException e) {
-				System.out.println("File not found");
+				
 			}
-		catch(IOException e) {
-			System.out.println("IO Error");
-		}
-		}
-	
-
-		}
-		
-	
-
-
-
+			bufferedReader.close();
+			
+		} catch(FileNotFoundException ex) {
+	            System.out.println("Unable to open file '" + file + "'");
+		} catch(IOException ex) {
+	            System.out.println("Error reading file '" + file + "'");                  
+	    }
+	}
+}

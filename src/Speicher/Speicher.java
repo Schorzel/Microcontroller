@@ -1,5 +1,9 @@
 package Speicher;
 
+import Laufzeit.Laufzeit;
+import Laufzeit.Reset;
+import Laufzeit.Timer;
+import Laufzeit.WatchDogTimer;
 import Speicher.FileRegister;
 
 public class Speicher {
@@ -142,7 +146,24 @@ public class Speicher {
 		wReg = value;
 	}
 
-	
+	public static void setPins(int AB, int bit) {
+		if(AB == 0) {
+			if(portPinA[bit] == 0) {
+				portPinA[bit] = 1 ;	
+			}
+			else {
+				portPinA[bit] = 0 ;	
+			}
+		}			
+		else {
+			if(portPinB[bit] == 0) {
+				portPinA[bit] = 1 ;	
+				}
+			else {
+				portPinB[bit] = 0 ;	
+				}
+			}	
+	}
 	
 	
 	public static void reloadArrayRegister(String command) {
@@ -199,7 +220,7 @@ public class Speicher {
 				data[i] = (FileRegister.getBankValue(bank, adresse) & masks_status[i]);
 				
 				if(data[i] != 0) {
-					data[i] = data[i] / data[i];
+					data[i] = 1;
 				}
 			}
 		}
@@ -248,8 +269,9 @@ public class Speicher {
 	
 	public static void reset()
 	{
-		//new Timer();
-		//new Watchdog();
+		new Laufzeit();
+		new Timer();
+		new WatchDogTimer();
 		new FileRegister();
 		new Stack();
 		PCL = 0;
@@ -257,7 +279,7 @@ public class Speicher {
 		PC = 0;
 		wReg = 0;
 		bankFlag = 0;
-		// GIE_Read_only = false;
+		
 
 		for (int i = 0; i < programmspeicher.length; i++) {
 			programmspeicher[i] = 0;
@@ -267,7 +289,7 @@ public class Speicher {
 			breakPoints[i] = false;
 		}
 
-		//Reset.POR();
+		Reset.POR();
 		reload();
 	}
 	

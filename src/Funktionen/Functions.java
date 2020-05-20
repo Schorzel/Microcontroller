@@ -2,8 +2,11 @@ package Funktionen;
 
 import java.math.BigInteger;
 
+import Laufzeit.WatchDogTimer;
 import Speicher.FileRegister;
 import Speicher.Speicher;
+import Speicher.Stack;
+
 
 
 public class Functions {
@@ -242,11 +245,42 @@ public class Functions {
 		Flags.checkFlagsCZ(value, false);
 	}
 
-	//CALL
 	
-	//CLRWDT
+	public static void CALL() {
+		Stack.setStack(adresse + 1);
+
+		int pc = 0;
+		int pclath = Speicher.getPCLATH();
+
+		pc = (pc | k);
+		pclath = (pclath & 0b11000) << 8;
+
+		pc = (pc | pclath);
+		Speicher.setPC(pc - 1); // Da der PC nach dem Befehl nochmal erhöht wird, rechnen wir hier -1
 	
-	//GOTO
+	}
+
+	public static void CLRWDT() {
+		// Affects -TO,-PD Flag
+		WatchDogTimer.resetTimer();
+		int option = FileRegister.getBankValue(1, 1);
+		int status = FileRegister.getBankValue(0, 3);
+		FileRegister.setDataInBank(1, 1, option & 0b11110111); // Clear PSA
+		FileRegister.setDataInBank(3, status | 0b00011000); // Set -TO and -PD
+		
+	}
+
+	public static void GOTO_() {
+		int pc = 0;
+		int pclath = Speicher.getPCLATH();
+
+		pc = (pc | k);
+		pclath = (pclath & 0b11000) << 8;
+
+		pc = (pc | pclath);
+		Speicher.setPC(pc - 1); // Da der PC nach dem Befehl nochmal erhöht wird, rechnen wir hier -1
+		
+	}
 
 	
 	public static void IORLW() {
@@ -262,14 +296,39 @@ public class Functions {
 		Speicher.setWReg(k);
 	}
 	
-	//RETFIE
 	
-	
-	//RETLW
-	
-	//RETURN
-	
-	//SLEEP
+	public static void RETFIE() {
+		Stack.setStackPointer(stackpointer - 1);
+		Speicher.setPC(Stack.getStackValue() - 1);
+		FileRegister.setDataInBank(11, FileRegister.getBankValue(0, 11) | 0b10000000); // GIE bit setzen
+		
+	}
+
+	public static void RETLW() {
+		Stack.setStackPointer(stackpointer - 1);
+		Speicher.setPC(Stack.getStackValue() - 1);
+		saveData(0, 0, k); // K ins W Register schreiben
+		
+	}
+
+	public static void RETURN_() {
+		Stack.setStackPointer(stackpointer - 1);
+		Speicher.setPC(Stack.getStackValue());
+		
+	}
+
+	public static void SLEEP() {
+		// Affects -TO,-PD Flag
+		sleep = true;
+		WatchDogTimer.resetTimer();
+		int option = FileRegister.getBankValue(1, 1);
+		int status = FileRegister.getBankValue(0, 3);
+		FileRegister.setDataInBank(1, 1, option & 0b11110111); // Clear PSA
+		FileRegister.setDataInBank(3, status | 0b00010000); // -TO setzen
+		FileRegister.setDataInBank(3, status & 0b11110111); // -PD l�schen
+
+		
+	}
 	
 	public static void SUBLW() {
 		Flags.checkFlagDC(k, Alu.zweierKomp(w));
