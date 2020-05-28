@@ -1,11 +1,17 @@
 package Funktionen;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 
 import Laufzeit.WatchDogTimer;
 import Speicher.FileRegister;
 import Speicher.Speicher;
 import Speicher.Stack;
+import Laufzeit.Laufzeit;
+import Laufzeit.WatchDogTimer;
+import Funktionen.Functions;
+import DateiVerarbeitung.Decoder;
 
 
 
@@ -28,6 +34,64 @@ public class Functions {
 	private static int d;
 	private static int f;
 	private static int k;
+	
+	
+	private static String functionName;
+	private static Method functionToCall;
+	
+	
+	public static void run() {
+		if (!sleep) {
+			reload();
+			System.out.println(Integer.toHexString(adresse) + ": '" + functionName + "' was called");
+
+			// Indirekte Adressierung. Wenn Adresse 0 abgefragt wird, benutzen wir
+			// stattdessen Adresse 4
+			if (f == 0) {
+				f = FileRegister.getBankValue(0, 4);
+			}
+
+			if (!functionName.equals("nop")) { // Abfrage ob �berhaupt ein Befehl ausgef�hrt werden soll
+
+				// Goto und Return haben einen Unterstrich am ende, der nun hinzugef�gt werden
+				// muss.
+				if (functionName.equals("goto")) {
+					functionName += "_";
+				} else if (functionName.equals("return")) {
+					functionName += "_";
+				}
+
+				// Funktions aufruf per Reflection (Reflection geht durch den Baum des codes und durchsucht diesen nach allen deklarierten funktionen)
+				try {
+					functionToCall = Functions.class.getDeclaredMethod(functionName);
+					functionToCall.invoke(null); // Null weil auf kein spezifisches Objekt bezogen
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			} else {
+				// Auch bei einem NOP befehl wird ein Zyklus ausgef�hr, der hier hochgez�hlt
+				// werden muss
+				cycles++;
+			}
+
+			countPC(); // PC erhöhen
+
+			// Timer f�r die anzahl der ausgef�hrten Zyklen erh�hen
+			for (int i = 0; i < cycles; i++) {
+				Laufzeit.increaseLaufzeitzaehler();
+			}
+		} else {
+			WatchDogTimer.increaseTimer();
+		}
+	}
 	
 	
 	public static boolean isSleep() {
@@ -344,7 +408,33 @@ public class Functions {
 	}
 	
 
+	protected static void reload() {
+		cFlag = false;
+		cycles = 0;
+
+		adresse = Speicher.getPC();
+		fileReg = FileRegister.getFReg();
+		stackpointer = Stack.getStackPointer();
+		bankFlag = Speicher.getBankFlag();
+		w = Speicher.getwReg();
+		b = Decoder.decodeParameter(adresse, "b");
+		d = Decoder.decodeParameter(adresse, "d");
+		f = Decoder.decodeParameter(adresse, "f");
+		k = Decoder.decodeParameter(adresse, "k");
+
+		functionName = Decoder.decodeCommand(adresse).toLowerCase();
+	}
 	
+	
+	protected static void countPC() {
+		int adresse = Speicher.getPC();
+		if (adresse == 0x3FF) { // Ende des PC Speichers => Reset auf 0
+			System.out.println("PC �berlauf: Zur�cksetzen auf Adresse 0");
+			Speicher.setPC(0);
+		} else {
+			Speicher.setPC(adresse++);
+		}
+	}
 
 	protected static void saveData(int d, int f, int value) {
 		if (d == 1) { // Speicher ins File-Register

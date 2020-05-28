@@ -13,13 +13,21 @@ import java.io.IOException;
 
 import javax.swing.*;
 
+import Speicher.FileRegister;
 import Speicher.Speicher;
+import Speicher.Stack;
 
-public class GUI  {
 
+public class GUI implements ActionListener  {
+
+	
+	
+	static int[][] rams = FileRegister.getFReg();
+	
+	
 	String datei = "C:\\Users\\Super\\git\\Microcontroller\\src\\LST_Files\\TPicSim1.LST";
 	
-	JFrame frame;
+	static JFrame frame;
 	
 	JPanel buttonPanel = new JPanel();
 	JPanel pinAPanel = new JPanel();
@@ -28,12 +36,16 @@ public class GUI  {
 	JLabel watchDogLabel = new JLabel();
 	JPanel watchDogPanel = new JPanel();
 	
+	
+	static String[] stackColumnNames = {"Index" , "Value"};
 	//Speicher speicher = new Speicher();
 	
 	
-	int[] statusReg = Speicher.getStatusRegister();
-	int[] optionReg = Speicher.getOptionReg();
-	int[] intconReg = Speicher.getIntconReg();
+	static int[] statusReg = Speicher.getStatusRegister();
+	static int[] optionReg = Speicher.getOptionReg();
+	static int[] intconReg = Speicher.getIntconReg();
+	
+	static int pc = Speicher.getPC();
 	
 	
 	//JRadioButton WatchDog
@@ -42,47 +54,55 @@ public class GUI  {
 	
 	ButtonGroup watchDog = new ButtonGroup();
 	
+	static JTable stack;
+	
 	
 	
 	// Pin Checkboxen
-	JCheckBox pinRA0 = new JCheckBox("RA0", false);
-	JCheckBox pinRA1 = new JCheckBox("RA1", false);
-	JCheckBox pinRA2 = new JCheckBox("RA2", false);
-	JCheckBox pinRA3 = new JCheckBox("RA3", false);
-	JCheckBox pinRA4 = new JCheckBox("RA4", false);
+	static JCheckBox pinRA0 = new JCheckBox("RA0", false);
+	static JCheckBox pinRA1 = new JCheckBox("RA1", false);
+	static JCheckBox pinRA2 = new JCheckBox("RA2", false);
+	static JCheckBox pinRA3 = new JCheckBox("RA3", false);
+	static JCheckBox pinRA4 = new JCheckBox("RA4", false);
 
-	JCheckBox pinRB0 = new JCheckBox("RB0", false);
-	JCheckBox pinRB1 = new JCheckBox("RB1", false);
-	JCheckBox pinRB2 = new JCheckBox("RB2", false);
-	JCheckBox pinRB3 = new JCheckBox("RB3", false);
-	JCheckBox pinRB4 = new JCheckBox("RB4", false);
-	JCheckBox pinRB5 = new JCheckBox("RB5", false);
-	JCheckBox pinRB6 = new JCheckBox("RB6", false);
-	JCheckBox pinRB7 = new JCheckBox("RB7", false);
+	static JCheckBox pinRB0 = new JCheckBox("RB0", false);
+	static JCheckBox pinRB1 = new JCheckBox("RB1", false);
+	static JCheckBox pinRB2 = new JCheckBox("RB2", false);
+	static JCheckBox pinRB3 = new JCheckBox("RB3", false);
+	static JCheckBox pinRB4 = new JCheckBox("RB4", false);
+	static JCheckBox pinRB5 = new JCheckBox("RB5", false);
+	static JCheckBox pinRB6 = new JCheckBox("RB6", false);
+	static JCheckBox pinRB7 = new JCheckBox("RB7", false);
 	
 	// Pin IO Checkboxen
-	JCheckBox pinRA0IO = new JCheckBox("RA0", false);
-	JCheckBox pinRA1IO = new JCheckBox("RA1", false);
-	JCheckBox pinRA2IO = new JCheckBox("RA2", false);
-	JCheckBox pinRA3IO = new JCheckBox("RA3", false);
-	JCheckBox pinRA4IO = new JCheckBox("RA4", false);
+	static JCheckBox pinRA0IO = new JCheckBox("RA0", false);
+	static JCheckBox pinRA1IO = new JCheckBox("RA1", false);
+	static JCheckBox pinRA2IO = new JCheckBox("RA2", false);
+	static JCheckBox pinRA3IO = new JCheckBox("RA3", false);
+	static JCheckBox pinRA4IO = new JCheckBox("RA4", false);
 
-	JCheckBox pinRB0IO = new JCheckBox("RB0", false);
-	JCheckBox pinRB1IO = new JCheckBox("RB1", false);
-	JCheckBox pinRB2IO = new JCheckBox("RB2", false);
-	JCheckBox pinRB3IO = new JCheckBox("RB3", false);
-	JCheckBox pinRB4IO = new JCheckBox("RB4", false);
-	JCheckBox pinRB5IO = new JCheckBox("RB5", false);
-	JCheckBox pinRB6IO = new JCheckBox("RB6", false);
-	JCheckBox pinRB7IO = new JCheckBox("RB7", false);
+	static JCheckBox pinRB0IO = new JCheckBox("RB0", false);
+	static JCheckBox pinRB1IO = new JCheckBox("RB1", false);
+	static JCheckBox pinRB2IO = new JCheckBox("RB2", false);
+	static JCheckBox pinRB3IO = new JCheckBox("RB3", false);
+	static JCheckBox pinRB4IO = new JCheckBox("RB4", false);
+	static JCheckBox pinRB5IO = new JCheckBox("RB5", false);
+	static JCheckBox pinRB6IO = new JCheckBox("RB6", false);
+	static JCheckBox pinRB7IO = new JCheckBox("RB7", false);
 
 	// Buttons
-	JButton start = new JButton("Start");
-	JButton stop = new JButton("Stop");
-	JButton reset = new JButton("Reset");
+	static JButton start = new JButton("Start");
+	static JButton load = new JButton("Load");
+	static JButton step = new JButton("Step");
 	
+
 	
-	
+	//FileRegister
+	static JTable fileRegister0;
+	static JTable fileRegister1;
+	static JScrollPane fileRegSP0;
+	static JScrollPane fileRegSP1;
+	static JTabbedPane fileRegTP;
 	
 
 	// Labels
@@ -94,7 +114,7 @@ public class GUI  {
 	static JLabel portATextIO = new JLabel("Port A IO");
 	static JLabel portBTextIO = new JLabel("Port B IO");
 
-	
+	JLabel stackText = new JLabel("Stack");
 	
 	//Bits
 	protected JLabel statusText = new JLabel("Status:");
@@ -110,14 +130,14 @@ public class GUI  {
 	protected JLabel DCText = new JLabel("DC");
 	protected JLabel CText = new JLabel("C");
 
-	protected JLabel IRPNumberText = new JLabel(Integer.toString(statusReg[0]));
-	protected JLabel RP1NumberText = new JLabel(Integer.toString(statusReg[1]));
-	protected JLabel RP0NumberText = new JLabel(Integer.toString(statusReg[2]));
-	protected JLabel TONumberText = new JLabel(Integer.toString(statusReg[3]));
-	protected JLabel PDNumberText = new JLabel(Integer.toString(statusReg[4]));
-	protected JLabel ZNumberText = new JLabel(Integer.toString(statusReg[5]));
-	protected JLabel DCNumberText = new JLabel(Integer.toString(statusReg[6]));
-	protected JLabel CNumberText = new JLabel(Integer.toString(statusReg[7]));
+	protected static JLabel IRPNumberText = new JLabel(Integer.toString(statusReg[0]));
+	protected static JLabel RP1NumberText = new JLabel(Integer.toString(statusReg[1]));
+	protected static JLabel RP0NumberText = new JLabel(Integer.toString(statusReg[2]));
+	protected static JLabel TONumberText = new JLabel(Integer.toString(statusReg[3]));
+	protected static JLabel PDNumberText = new JLabel(Integer.toString(statusReg[4]));
+	protected static JLabel ZNumberText = new JLabel(Integer.toString(statusReg[5]));
+	protected static JLabel DCNumberText = new JLabel(Integer.toString(statusReg[6]));
+	protected static JLabel CNumberText = new JLabel(Integer.toString(statusReg[7]));
 
 	protected JLabel RPUText = new JLabel("RPU");
 	protected JLabel IEGText = new JLabel("IEG");
@@ -128,14 +148,14 @@ public class GUI  {
 	protected JLabel PS1Text = new JLabel("PS1");
 	protected JLabel PS0Text = new JLabel("PS0");
 
-	protected JLabel RPUNumberText = new JLabel(Integer.toString(optionReg[0]));
-	protected JLabel IEGNumberText = new JLabel(Integer.toString(optionReg[1]));
-	protected JLabel TCSNumberText = new JLabel(Integer.toString(optionReg[2]));
-	protected JLabel TSENumberText = new JLabel(Integer.toString(optionReg[3]));
-	protected JLabel PSANumberText = new JLabel(Integer.toString(optionReg[4]));
-	protected JLabel PS2NumberText = new JLabel(Integer.toString(optionReg[5]));
-	protected JLabel PS1NumberText = new JLabel(Integer.toString(optionReg[6]));
-	protected JLabel PS0NumberText = new JLabel(Integer.toString(optionReg[7]));
+	protected static JLabel RPUNumberText = new JLabel(Integer.toString(optionReg[0]));
+	protected static JLabel IEGNumberText = new JLabel(Integer.toString(optionReg[1]));
+	protected static JLabel TCSNumberText = new JLabel(Integer.toString(optionReg[2]));
+	protected static JLabel TSENumberText = new JLabel(Integer.toString(optionReg[3]));
+	protected static JLabel PSANumberText = new JLabel(Integer.toString(optionReg[4]));
+	protected static JLabel PS2NumberText = new JLabel(Integer.toString(optionReg[5]));
+	protected static JLabel PS1NumberText = new JLabel(Integer.toString(optionReg[6]));
+	protected static JLabel PS0NumberText = new JLabel(Integer.toString(optionReg[7]));
 
 	protected JLabel GIEText = new JLabel("GIE");
 	protected JLabel EIEText = new JLabel("EIE");
@@ -146,14 +166,14 @@ public class GUI  {
 	protected JLabel IFText = new JLabel("IF");
 	protected JLabel RIFText = new JLabel("RIF");
 
-	protected JLabel GIENumberText = new JLabel(Integer.toString(intconReg[0]));
-	protected JLabel EIENumberText = new JLabel(Integer.toString(intconReg[1]));
-	protected JLabel TIENumberText = new JLabel(Integer.toString(intconReg[2]));
-	protected JLabel IENumberText = new JLabel(Integer.toString(intconReg[3]));
-	protected JLabel RIENumberText = new JLabel(Integer.toString(intconReg[4]));
-	protected JLabel TIFNumberText = new JLabel(Integer.toString(intconReg[5]));
-	protected JLabel IFNumberText = new JLabel(Integer.toString(intconReg[6]));
-	protected JLabel RIFNumberText = new JLabel(Integer.toString(intconReg[7]));
+	protected static JLabel GIENumberText = new JLabel(Integer.toString(intconReg[0]));
+	protected static JLabel EIENumberText = new JLabel(Integer.toString(intconReg[1]));
+	protected static JLabel TIENumberText = new JLabel(Integer.toString(intconReg[2]));
+	protected static JLabel IENumberText = new JLabel(Integer.toString(intconReg[3]));
+	protected static JLabel RIENumberText = new JLabel(Integer.toString(intconReg[4]));
+	protected static JLabel TIFNumberText = new JLabel(Integer.toString(intconReg[5]));
+	protected static JLabel IFNumberText = new JLabel(Integer.toString(intconReg[6]));
+	protected static JLabel RIFNumberText = new JLabel(Integer.toString(intconReg[7]));
 	
 
 	private static String[][] loadFile(String datei) { // Datei ins programm laden/einlesen
@@ -209,25 +229,138 @@ public class GUI  {
 	}
 
 	
+	public static void Stack() {
+		int[] tempStack = Stack.getStack();
+		String[][] stackArray = {{"0",Integer.toString(tempStack[0])},
+		{"1",Integer.toString(tempStack[1])},
+		{"2",Integer.toString(tempStack[2])},
+		{"3",Integer.toString(tempStack[3])},
+		{"4",Integer.toString(tempStack[4])},
+		{"5",Integer.toString(tempStack[5])},
+		{"6",Integer.toString(tempStack[6])},
+		{"7",Integer.toString(tempStack[7])}				
+		};
+		
+		
+		
+		stack = new JTable (stackArray, stackColumnNames);
+	}
+	
+	public static String leadingZero(int number)
+	{
+		return (number < 16 ? "0" : "") + Integer.toHexString(number).toUpperCase();
+	}
+	
+	
+	public static void initializeFileReg() {
+		
+		fileRegTP = new JTabbedPane();
+		
+		String[] fileRegisterColum = { "","00","10" ,"20" ,"30" ,"40" ,"50" ,"60" ,"70"};
+		
+		
+		
+		
+		String[][] fileData0 = new String [16][9];
+		String[][] fileData1 = new String [16][9];
+		
+		
+		
+		
+		
+		
+		fileData0[0][0] = "";
+		fileData1[0][0] = "";
+		
+		
+		for (int i = 0; i < fileData0.length; i++) {
+			fileData0[i][0] = leadingZero(i);
+			fileData1[i][0] = leadingZero(i);
+		}
+		
+		
+		int columnMultiplicator = 0;
+		for(int i = 0; i < rams[0].length; i++) {
+				
+				fileData0[i % 16][columnMultiplicator+1] = leadingZero(FileRegister.getBankValue(0,i));
+				fileData1[i % 16][columnMultiplicator+1] = leadingZero(FileRegister.getBankValue(1,i));
+				
+				
+				if (i % 16 == 15 && i > 0) {
+					columnMultiplicator++;
+				}
+		}
+		
+		
+		
+		fileRegister0 = new JTable(fileData0,fileRegisterColum);
+		fileRegister1 = new JTable(fileData1,fileRegisterColum);
+		
+		fileRegSP0 = new JScrollPane(fileRegister0);
+		fileRegSP1 = new JScrollPane(fileRegister1);
+		
+		fileRegTP.addTab("Bank0", fileRegSP0);
+		fileRegTP.addTab("Bank1", fileRegSP1);
+		
+		
+		fileRegTP.setBounds(750, 290, 500,308);
+		
+		frame.getContentPane().add(fileRegTP);
+		
+		
+	}
+	
+
+	
 	public GUI(){
 		
-		
+		Speicher.reset();
 	//	frame();		
 		
 		frame = new JFrame("Pic");
 	
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		frame.setSize(1000, 700);
+		frame.setSize(1300, 700);
 		
 		
 		JTable lstFile;
 		
-	/*	//Action listener Test
-		start.addActionListener(this);
-		stop.addActionListener(this);
-		reset.addActionListener(this);
-*/
+		//Action listener Test
+		ActionListener actionListener = new ActionHandler();
+		pinRA0.addActionListener(actionListener);
+		pinRA1.addActionListener(actionListener);
+		pinRA2.addActionListener(actionListener);
+		pinRA3.addActionListener(actionListener);
+		pinRA4.addActionListener(actionListener);
+		
+		
+		pinRA0IO.addActionListener(actionListener);
+		pinRA1IO.addActionListener(actionListener);
+		pinRA2IO.addActionListener(actionListener);
+		pinRA3IO.addActionListener(actionListener);
+		pinRA4IO.addActionListener(actionListener);
+
+		
+		pinRB0.addActionListener(actionListener);
+		pinRB1.addActionListener(actionListener);
+		pinRB2.addActionListener(actionListener);
+		pinRB3.addActionListener(actionListener);
+		pinRB4.addActionListener(actionListener);
+		pinRB5.addActionListener(actionListener);
+		pinRB6.addActionListener(actionListener);
+		pinRB7.addActionListener(actionListener);
+		
+		
+		pinRB0IO.addActionListener(actionListener);
+		pinRB1IO.addActionListener(actionListener);
+		pinRB2IO.addActionListener(actionListener);
+		pinRB3IO.addActionListener(actionListener);
+		pinRB4IO.addActionListener(actionListener);
+		pinRB5IO.addActionListener(actionListener);
+		pinRB6IO.addActionListener(actionListener);
+		pinRB7IO.addActionListener(actionListener);
+	
 		
 
 	
@@ -236,13 +369,16 @@ public class GUI  {
 		// JTable
 
 		// Column Names
-		String[] columnNames = { "Adresse", "Code", "Zeile", "Start/Ende", "Kommentar" };
-
-		lstFile = new JTable(loadFile(datei), columnNames);
+		String[] lstColumnNames = { "Adresse", "Code", "Zeile", "Start/Ende", "Kommentar" };
+		
+		Stack();
+		
+	
+		lstFile = new JTable(loadFile(datei), lstColumnNames);
 
 		//lstFile.setBounds(0,0,700,600);
 
-		
+		JScrollPane stackSP = new JScrollPane(stack);
 		
 		JScrollPane lstFileSP = new JScrollPane(lstFile);
 		
@@ -265,11 +401,17 @@ public class GUI  {
 		watchDogPanel.add(watchDogOFF);
 		watchDogPanel.add(watchDogON);
 		watchDogPanel.add(watchDogLabel);
+		
+		ActionListener buttonListener = new ButtonHandler();
 
 		buttonPanel.add(start);
-		buttonPanel.add(stop);
-		buttonPanel.add(reset);
+		buttonPanel.add(load);
+		buttonPanel.add(step);
 
+		
+		start.addActionListener(buttonListener);
+		load.addActionListener(buttonListener);
+		step.addActionListener(buttonListener);
 		
 		//Adding to pinPanel
 		pinAPanel.add(pinRA0);
@@ -293,6 +435,11 @@ public class GUI  {
 		pinAPanel.add(pinRA2IO);
 		pinAPanel.add(pinRA3IO);
 		pinAPanel.add(pinRA4IO);
+		pinRA0IO.setEnabled(false);
+		pinRA1IO.setEnabled(false);
+		pinRA2IO.setEnabled(false);
+		pinRA3IO.setEnabled(false);
+		pinRA4IO.setEnabled(false);
 
 		pinBPanel.add(pinRB0IO);
 		pinBPanel.add(pinRB1IO);
@@ -302,6 +449,14 @@ public class GUI  {
 		pinBPanel.add(pinRB5IO);
 		pinBPanel.add(pinRB6IO);
 		pinBPanel.add(pinRB7IO);
+		pinRB0IO.setEnabled(false);
+		pinRB1IO.setEnabled(false);
+		pinRB2IO.setEnabled(false);
+		pinRB3IO.setEnabled(false);
+		pinRB4IO.setEnabled(false);
+		pinRB5IO.setEnabled(false);
+		pinRB6IO.setEnabled(false);
+		pinRB7IO.setEnabled(false);
 
 		
 		//Adding to bitpanel
@@ -378,11 +533,11 @@ public class GUI  {
 		pinAPanel.setBounds(150, 30, 110, 170);
 		pinBPanel.setBounds(270,30,110,170);
 		
-		watchDogPanel.setBounds(750, 50, 100, 100);
+		watchDogPanel.setBounds(750, 210, 100, 100);
 
 		start.setBounds(0, 0, 80, 50);
-		stop.setBounds(0, 50, 80, 50);
-		reset.setBounds(0, 100, 80, 50);
+		load.setBounds(0, 50, 80, 50);
+		step.setBounds(0, 100, 80, 50);
 
 		pinRA0.setBounds(0, 0, 50, 20);
 		pinRA1.setBounds(0, 20, 50, 20);
@@ -477,25 +632,32 @@ public class GUI  {
 		//RadioButton WatchDog
 		watchDogON.setBounds(0, 25, 50, 25);
 		watchDogOFF.setBounds(50, 25, 50, 25);
-		watchDogLabel.setBounds(770, 50, 100, 20);
+		watchDogLabel.setBounds(770, 210, 100, 20);
 		watchDogLabel.setText("WatchDog");
 		
 		watchDog.add(watchDogON);
 		watchDog.add(watchDogOFF);
 		
 		lstFileSP.setBounds(20, 200, 700, 400);
+		
+		stackSP.setBounds(750,40,200,151);
+		
+		stackText.setBounds(830,20,50,10);
 
 		
 		// Color
 		start.setBackground(new Color(0, 120, 0));
-		stop.setBackground(new Color(255, 0, 0));
-		reset.setBackground(new Color(0, 255, 255));
+		load.setBackground(new Color(255, 0, 0));
+		step.setBackground(new Color(0, 255, 255));
 		
 		bitPanel.setBorder(BorderFactory.createTitledBorder("Bit"));
 		
+	
+			
+		initializeFileReg();
 
-
-	        
+		
+	    frame.add(stackText);
 		frame.add(buttonPanel);
 		frame.add(pinAPanel);
 		frame.add(pinBPanel);
@@ -507,11 +669,13 @@ public class GUI  {
 		frame.add(watchDogLabel);
 		frame.add(watchDogPanel);
 		frame.add(bitPanel);
-
+		frame.add(stackSP);
+		
 		
 		// Layout
 	
 		watchDogPanel.setLayout(null);
+		//stack.setLayout(null);
 		bitPanel.setLayout(null);
 		buttonPanel.setLayout(null);
 		pinAPanel.setLayout(null);
@@ -521,30 +685,25 @@ public class GUI  {
 		
 	
 
+
 		
 	}
 
 
 
-	public void actionPerformed(ActionEvent ae) {
-		 if(ae.getSource() == this.start){
-	            watchDogLabel.setText(("Button 1 wurde betätigt"));
-	        }
-	        else if(ae.getSource() == this.stop){
-	            watchDogLabel.setText("Button 2 wurde betätigt");
-	        }
-	        else if (ae.getSource() == this.reset){
-	            watchDogLabel.setText(("Button 3 wurde betätigt"));
-	        }
-		
-	}
 	
 	
-
 	public static void main(String[] args) {
 		new GUI();
 
 	
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

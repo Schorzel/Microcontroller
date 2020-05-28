@@ -146,25 +146,23 @@ public class Speicher {
 		wReg = value;
 	}
 
-	public static void setPins(int AB, int bit) {
-		if(AB == 0) {
-			if(portPinA[bit] == 0) {
-				portPinA[bit] = 1 ;	
-			}
-			else {
-				portPinA[bit] = 0 ;	
-			}
+	public static void setPins(int AB, int bit, int state) {
+		if(AB == 0) {			
+			portPinA[bit] = state ;	
 		}			
-		else {
-			if(portPinB[bit] == 0) {
-				portPinA[bit] = 1 ;	
-				}
-			else {
-				portPinB[bit] = 0 ;	
-				}
+		else {	
+			portPinB[bit] = state ;			
 			}	
 	}
 	
+	public static void setPinsIO(int AB, int bit, int state) {
+		if(AB == 0) {			
+			tristPinA[bit] = state ;	
+		}			
+		else {	
+			tristPinB[bit] = state ;			
+			}	
+	}
 	
 	public static void reloadArrayRegister(String command) {
 
