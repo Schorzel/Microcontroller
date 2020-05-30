@@ -39,6 +39,8 @@ public class GUI implements ActionListener
 	static JLabel wRegLabel;
 
 	static JLabel wRegTitle;
+	
+	static JTable lstFile;
 
 	JPanel buttonPanel = new JPanel();
 
@@ -64,9 +66,11 @@ public class GUI implements ActionListener
 	static int pc = Speicher.getPC();
 
 	// JRadioButton WatchDog
-	JRadioButton watchDogON = new JRadioButton("Ein");
+	static JRadioButton watchDogON = new JRadioButton("Ein");
 
-	JRadioButton watchDogOFF = new JRadioButton("Aus");
+	static JRadioButton watchDogOFF = new JRadioButton("Aus");
+	
+	
 
 	ButtonGroup watchDog = new ButtonGroup();
 
@@ -429,7 +433,7 @@ public class GUI implements ActionListener
 
 		frame.add(wRegLabel);
 
-		JTable lstFile;
+		
 
 		// Action listener Test
 		ActionListener actionListener = new ActionHandler();
@@ -496,6 +500,10 @@ public class GUI implements ActionListener
 		watchDogPanel.add(watchDogLabel);
 
 		ActionListener buttonListener = new ButtonHandler();
+		
+		
+		watchDogON.addActionListener(buttonListener);
+		watchDogOFF.addActionListener(buttonListener);
 
 		buttonPanel.add(start);
 		buttonPanel.add(load);
@@ -527,11 +535,7 @@ public class GUI implements ActionListener
 		pinAPanel.add(pinRA2IO);
 		pinAPanel.add(pinRA3IO);
 		pinAPanel.add(pinRA4IO);
-		pinRA0IO.setEnabled(false);
-		pinRA1IO.setEnabled(false);
-		pinRA2IO.setEnabled(false);
-		pinRA3IO.setEnabled(false);
-		pinRA4IO.setEnabled(false);
+		
 
 		pinBPanel.add(pinRB0IO);
 		pinBPanel.add(pinRB1IO);
@@ -541,14 +545,7 @@ public class GUI implements ActionListener
 		pinBPanel.add(pinRB5IO);
 		pinBPanel.add(pinRB6IO);
 		pinBPanel.add(pinRB7IO);
-		pinRB0IO.setEnabled(false);
-		pinRB1IO.setEnabled(false);
-		pinRB2IO.setEnabled(false);
-		pinRB3IO.setEnabled(false);
-		pinRB4IO.setEnabled(false);
-		pinRB5IO.setEnabled(false);
-		pinRB6IO.setEnabled(false);
-		pinRB7IO.setEnabled(false);
+		
 
 		// Adding to bitpanel
 		bitPanel.add(statusText);

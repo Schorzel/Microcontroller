@@ -75,6 +75,7 @@ public class WatchDogTimer
 	public static void setEnabled()
 	{
 		enabled = !enabled;
+		
 	}
 
 	private static void setPRS()

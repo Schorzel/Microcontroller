@@ -4,17 +4,17 @@ import Speicher.FileRegister;
 import Speicher.Speicher;
 import Speicher.Stack;
 
-public class Reloads extends GUI
-{
+public class Reloads extends GUI {
 
-	public static void ReloadGUI()
-	{
+	public static void ReloadGUI() {
 
 		reloadStack();
 
 		reloadPins();
 
 		initializeFileReg();
+
+		setMarker();
 
 		IRPNumberText.setText(Integer.toString(statusReg[0]));
 		RP1NumberText.setText(Integer.toString(statusReg[1]));
@@ -46,8 +46,7 @@ public class Reloads extends GUI
 		wRegLabel.setText(Integer.toHexString(Speicher.getwReg()));
 	}
 
-	public static void ReloadAttributes()
-	{
+	public static void ReloadAttributes() {
 		pc = Speicher.getPC();
 		rams = FileRegister.getFReg();
 
@@ -56,8 +55,7 @@ public class Reloads extends GUI
 		intconReg = Speicher.getIntconReg();
 	}
 
-	public static void reloadStack()
-	{
+	public static void reloadStack() {
 		int[] stackArray = Stack.getStack();
 
 		for (int i = 0; i < 8; i++) {
@@ -65,8 +63,7 @@ public class Reloads extends GUI
 		}
 	}
 
-	public static void reloadPins()
-	{
+	public static void reloadPins() {
 		int[] portPinA = Speicher.getPortPinA();
 		int[] portPinB = Speicher.getPortPinB();
 		int[] tristPinA = Speicher.getTristPinA();
@@ -102,6 +99,36 @@ public class Reloads extends GUI
 		pinRB6.setSelected(tristPinB[1] == 1);
 		pinRB7.setSelected(tristPinB[0] == 1);
 
+		pinRA0IO.setEnabled(pinRA0.isSelected());
+		pinRA1IO.setEnabled(pinRA1.isSelected());
+		pinRA2IO.setEnabled(pinRA2.isSelected());
+		pinRA3IO.setEnabled(pinRA3.isSelected());
+		pinRA4IO.setEnabled(pinRA4.isSelected());
+
+		pinRB0IO.setEnabled(pinRB0.isSelected());
+		pinRB1IO.setEnabled(pinRB1.isSelected());
+		pinRB2IO.setEnabled(pinRB2.isSelected());
+		pinRB3IO.setEnabled(pinRB3.isSelected());
+		pinRB4IO.setEnabled(pinRB4.isSelected());
+		pinRB5IO.setEnabled(pinRB5.isSelected());
+		pinRB6IO.setEnabled(pinRB6.isSelected());
+		pinRB7IO.setEnabled(pinRB7.isSelected());
+
+	}
+
+	public static void setMarker() {
+		for (int i = 0; i < lstFile.getRowCount(); i++) {
+			String row = (String) lstFile.getValueAt(i, 0);
+			if (row != null) {
+
+				if (!row.equals("    ")) {
+
+					if (Speicher.getPC() == Integer.parseInt(row)) {
+						lstFile.setRowSelectionInterval(i, i);
+					}
+				}
+			}
+		}
 	}
 
 }
