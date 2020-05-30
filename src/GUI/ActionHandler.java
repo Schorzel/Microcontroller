@@ -2,14 +2,17 @@ package GUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JCheckBox;
-import GUI.GUI;
+
 import Speicher.Speicher;
 
-public class ActionHandler implements ActionListener {
+public class ActionHandler implements ActionListener
+{
 
 	@Override
-	public void actionPerformed(ActionEvent event) {
+	public void actionPerformed(ActionEvent event)
+	{
 		JCheckBox checkbox = (JCheckBox) event.getSource();
 
 		int[] pins = Speicher.getPortPinA();
@@ -17,35 +20,35 @@ public class ActionHandler implements ActionListener {
 
 		if (checkbox == GUI.pinRA0) {
 			if (checkbox.isSelected()) {
-				Speicher.setPins(0, 0, 1);
+				Speicher.setPins(0, 7, 1);
 				GUI.pinRA0IO.setEnabled(true);
 
-				System.out.println("Pins: " + pins[0]);
-				System.out.println("IO: " + pinsIO[0]);
+				System.out.println("Pins: " + pins[7]);
+				System.out.println("IO: " + pinsIO[7]);
 			}
 			if (!checkbox.isSelected()) {
-				Speicher.setPins(0, 0, 0);
-				Speicher.setPinsIO(0, 0, 0);
+				Speicher.setPins(0, 7, 0);
+				Speicher.setPinsIO(0, 7, 0);
 				GUI.pinRA0IO.setSelected(false);
 				GUI.pinRA0IO.setEnabled(false);
-				System.out.println("Pins: " + pins[0]);
-				System.out.println("IO: " + pinsIO[0]);
+				System.out.println("Pins: " + pins[7]);
+				System.out.println("IO: " + pinsIO[7]);
 
 			}
 		}
 		if (checkbox == GUI.pinRA0IO) {
 			if (checkbox.isSelected()) {
-				Speicher.setPinsIO(0, 0, 1);
-				System.out.println("Pins: " + pins[0]);
-				System.out.println("IO: " + pinsIO[0]);
+				Speicher.setPinsIO(0, 7, 1);
+				System.out.println("Pins: " + pins[7]);
+				System.out.println("IO: " + pinsIO[7]);
 			}
 			if (!checkbox.isSelected()) {
-				Speicher.setPinsIO(0, 0, 0);
-				System.out.println("Pins: " + pins[0]);
-				System.out.println("IO: " + pinsIO[0]);
+				Speicher.setPinsIO(0, 7, 0);
+				System.out.println("Pins: " + pins[7]);
+				System.out.println("IO: " + pinsIO[7]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRA1) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(0, 1, 1);
@@ -76,7 +79,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[1]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRA2) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(0, 2, 1);
@@ -107,7 +110,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[2]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRA3) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(0, 3, 1);
@@ -138,7 +141,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[3]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRA4) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(0, 4, 1);
@@ -169,7 +172,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[0]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRB0) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(1, 0, 1);
@@ -200,7 +203,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[0]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRB1) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(1, 1, 1);
@@ -231,7 +234,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[0]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRB2) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(1, 2, 1);
@@ -262,7 +265,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[0]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRB3) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(1, 3, 1);
@@ -293,7 +296,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[0]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRB4) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(1, 4, 1);
@@ -324,7 +327,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[0]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRB5) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(1, 5, 1);
@@ -355,7 +358,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[0]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRB6) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(1, 6, 1);
@@ -386,7 +389,7 @@ public class ActionHandler implements ActionListener {
 				System.out.println("IO: " + pinsIO[0]);
 			}
 		}
-		
+
 		if (checkbox == GUI.pinRB7) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(1, 7, 1);

@@ -4,28 +4,35 @@ import Laufzeit.Laufzeit;
 import Laufzeit.Reset;
 import Laufzeit.Timer;
 import Laufzeit.WatchDogTimer;
-import Speicher.FileRegister;
 
-public class Speicher {
+public class Speicher
+{
 
-	
-	private static final int[] masks_status = {0b10000000, 0b01000000, 0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010, 0b00000001}; 
-	private static final int[] masks_set = {0b00000001, 0b00000010, 0b00000100, 0b00001000, 0b00010000, 0b00100000, 0b01000000, 0b10000000};
-	private static final int[] masks_clear = {0b11111110, 0b11111101, 0b11111011, 0b11110111, 0b11101111, 0b11011111, 0b10111111, 0b01111111};
-	
-	
+	private static final int[] masks_status = { 0b10000000, 0b01000000,
+			0b00100000, 0b00010000, 0b00001000, 0b00000100, 0b00000010,
+			0b00000001 };
+
+	private static final int[] masks_set = { 0b00000001, 0b00000010, 0b00000100,
+			0b00001000, 0b00010000, 0b00100000, 0b01000000, 0b10000000 };
+
+	private static final int[] masks_clear = { 0b11111110, 0b11111101,
+			0b11111011, 0b11110111, 0b11101111, 0b11011111, 0b10111111,
+			0b01111111 };
+
 	private static final int return_mask = 0b11111111;
-	
-	
-	
+
 	// Programmspeicher
 	private static int[] programmspeicher = new int[1024];
 
 	// Flags & Registers
 	private static int PCL;
+
 	private static int PCLATH;
-	private static int PC; //Programmzähler
+
+	private static int PC; // Programmzähler
+
 	private static int wReg;
+
 	private static int bankFlag;
 
 	// Status Register
@@ -34,91 +41,112 @@ public class Speicher {
 
 	// Register File Summary
 	private static int[] optionReg = new int[8];
+
 	private static int[] intconReg = new int[8];
+
 	private static int[] tristPinA = new int[8];
+
 	private static int[] tristPinB = new int[8];
+
 	private static int[] portPinA = new int[8];
+
 	private static int[] portPinB = new int[8];
-	
-	//Break Points
+
+	// Break Points
 	private static boolean[] breakPoints = new boolean[1024];
 
-	
-	//Getter
-	
-	public static int[] getMasksStatus() {
+	// Getter
+
+	public static int[] getMasksStatus()
+	{
 		return masks_status;
 	}
 
-	public static int[] getMasksSet() {
+	public static int[] getMasksSet()
+	{
 		return masks_set;
 	}
 
-	public static int[] getMasksClear() {
+	public static int[] getMasksClear()
+	{
 		return masks_clear;
 	}
 
-	public static int getPCL() {
+	public static int getPCL()
+	{
 		return PCL;
 	}
 
-	public static int getPCLATH() {
+	public static int getPCLATH()
+	{
 		return PCLATH;
 	}
 
-	public static int getPC() {
+	public static int getPC()
+	{
 		return PC;
 	}
 
-	public static int getwReg() {
+	public static int getwReg()
+	{
 		return wReg;
 	}
 
-	public static int getBankFlag() {
+	public static int getBankFlag()
+	{
 		return bankFlag;
 	}
 
-	public static int[] getStatusRegister() {
+	public static int[] getStatusRegister()
+	{
 		return statusRegister;
 	}
 
-	public static int[] getOptionReg() {
+	public static int[] getOptionReg()
+	{
 		return optionReg;
 	}
 
-	public static int[] getIntconReg() {
+	public static int[] getIntconReg()
+	{
 		return intconReg;
 	}
 
-	public static int[] getTristPinA() {
+	public static int[] getTristPinA()
+	{
 		return tristPinA;
 	}
 
-	public static int[] getTristPinB() {
+	public static int[] getTristPinB()
+	{
 		return tristPinB;
 	}
 
-	public static int[] getPortPinA() {
+	public static int[] getPortPinA()
+	{
 		return portPinA;
 	}
 
-	public static int[] getPortPinB() {
+	public static int[] getPortPinB()
+	{
 		return portPinB;
 	}
 
-	public static int[] getProgrammspeicher() {
+	public static int[] getProgrammspeicher()
+	{
 		return programmspeicher;
 	}
-	
-	// Setter 
-	
-	//Programmspeicher(Wird mit Parser ausgelesen und dann mit set gesetzt)
-	public static void setProgrammspeicher(int adresse, int befehlscode) {
+
+	// Setter
+
+	// Programmspeicher(Wird mit Parser ausgelesen und dann mit set gesetzt)
+	public static void setProgrammspeicher(int adresse, int befehlscode)
+	{
 
 		programmspeicher[adresse] = befehlscode;
 	}
-	
-	//Break Points Setter
+
+	// Break Points Setter
 	public static void setBreakPoint(int pc)
 	{
 		if (breakPoints[pc] != true) {
@@ -127,52 +155,48 @@ public class Speicher {
 			breakPoints[pc] = false;
 		}
 	}
-	
+
 	public static void setBankFlag()
 	{
 		bankFlag = statusRegister[2];
 	}
-	
-	
+
 	public static void setPC(int value)
 	{
 		PC = value;
 		reloadPCL();
 	}
-	
 
 	public static void setWReg(int value)
 	{
 		wReg = value;
 	}
 
-	public static void setPins(int AB, int bit, int state) {
-		if(AB == 0) {			
-			portPinA[bit] = state ;	
-		}			
-		else {	
-			portPinB[bit] = state ;			
-			}	
+	public static void setPins(int AB, int bit, int state)
+	{
+		if (AB == 0) {
+			portPinA[bit] = state;
+		} else {
+			portPinB[bit] = state;
+		}
 	}
-	
-	public static void setPinsIO(int AB, int bit, int state) {
-		if(AB == 0) {			
-			tristPinA[bit] = state ;	
-		}			
-		else {	
-			tristPinB[bit] = state ;			
-			}	
+
+	public static void setPinsIO(int AB, int bit, int state)
+	{
+		if (AB == 0) {
+			tristPinA[bit] = state;
+		} else {
+			tristPinB[bit] = state;
+		}
 	}
-	
-	public static void reloadArrayRegister(String command) {
+
+	public static void reloadArrayRegister(String command)
+	{
 
 		int[] data = new int[8];
 		int bank = -1;
 		int adresse = -1;
 
-		
-		
-		
 		switch (command) {
 		case "status":
 			bank = bankFlag;
@@ -183,47 +207,47 @@ public class Speicher {
 			bank = 1;
 			adresse = 1;
 			break;
-		
+
 		case "intcon":
 			bank = 0;
 			adresse = 11;
 			break;
-		
+
 		case "tristPinA":
 			bank = 1;
 			adresse = 5;
 			break;
-		
+
 		case "tristPinB":
 			bank = 1;
 			adresse = 6;
 			break;
-		
+
 		case "portPinA":
 			bank = 0;
 			adresse = 5;
 			break;
-			
+
 		case "portPinB":
 			bank = 0;
 			adresse = 6;
 			break;
-		
+
 		}
-		
-		if(bank < 0 || adresse < 0) {
+
+		if (bank < 0 || adresse < 0) {
 			System.out.println("Fehler: Falscher Befehl");
-		}else {
-			for(int i = 0;i < masks_status.length;i++) {
-				data[i] = (FileRegister.getBankValue(bank, adresse) & masks_status[i]);
-				
-				if(data[i] != 0) {
+		} else {
+			for (int i = 0; i < masks_status.length; i++) {
+				data[i] = (FileRegister.getBankValue(bank, adresse)
+						& masks_status[i]);
+
+				if (data[i] != 0) {
 					data[i] = 1;
 				}
 			}
 		}
-		
-		
+
 		switch (command) {
 		case "status":
 			statusRegister = data;
@@ -233,29 +257,28 @@ public class Speicher {
 		case "option":
 			optionReg = data;
 			break;
-		
+
 		case "intcon":
 			intconReg = data;
 			break;
-		
+
 		case "tristPinA":
 			tristPinA = data;
 			break;
-		
+
 		case "tristPinB":
 			tristPinB = data;
 			break;
-		
+
 		case "portPinA":
 			portPinA = data;
 			break;
-			
+
 		case "portPinB":
 			portPinB = data;
 			break;
-		
+
 		}
-		
 
 	}
 
@@ -264,7 +287,7 @@ public class Speicher {
 		PCL = (PC & return_mask);
 		FileRegister.setDataInBank(2, PCL);
 	}
-	
+
 	public static void reset()
 	{
 		new Laufzeit();
@@ -277,7 +300,6 @@ public class Speicher {
 		PC = 0;
 		wReg = 0;
 		bankFlag = 0;
-		
 
 		for (int i = 0; i < programmspeicher.length; i++) {
 			programmspeicher[i] = 0;
@@ -290,29 +312,28 @@ public class Speicher {
 		Reset.POR();
 		reload();
 	}
-	
+
 	public static void reload()
 	{
 		reloadArray();
-		
+
 		reloadPCL();
 		PCLATH = FileRegister.getBankValue(0, 10);
-		
+
 	}
-	
-	public static void reloadArray() {
+
+	public static void reloadArray()
+	{
 		reloadArrayRegister("status");
 		setBankFlag();
-		
+
 		reloadArrayRegister("option");
 		reloadArrayRegister("intcon");
-		
+
 		reloadArrayRegister("tristPinA");
 		reloadArrayRegister("tristPinB");
 		reloadArrayRegister("portPinA");
 		reloadArrayRegister("portPinB");
 	}
-	
-	
-	
+
 }

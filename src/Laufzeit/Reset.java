@@ -1,18 +1,22 @@
 package Laufzeit;
+
 import Funktionen.Functions;
 import Speicher.FileRegister;
 import Speicher.Speicher;
 
+public class Reset
+{
 
-public class Reset {
-
-	//Register
+	// Register
 	private static int[] status;
+
 	private static int[] option;
+
 	private static int[] intcon;
-	
-	//Tabelle auf Datenblatt S.43
-	public static void POR() {
+
+	// Tabelle auf Datenblatt S.43
+	public static void POR()
+	{
 		FileRegister.setDataInBank(2, 0b0000); // PCL
 		FileRegister.setDataInBank(3, 0b00011000); // Status
 		FileRegister.setDataInBank(10, 0b00000000); // PCLATH
@@ -27,12 +31,15 @@ public class Reset {
 
 		Speicher.reload();
 	}
-	
-	public static void normalReset() {
+
+	public static void normalReset()
+	{
 		FileRegister.setDataInBank(2, 0b0000); // PCL
-//		FileRegister.setData(3, FileRegister.getValueAt(0, 3) & 0b00000111); // Status Verstehen wir noch nicht
+		// FileRegister.setData(3, FileRegister.getValueAt(0, 3) & 0b00000111); //
+		// Status Verstehen wir noch nicht
 		FileRegister.setDataInBank(10, 0b00000000); // PCLATH
-		FileRegister.setDataInBank(11, FileRegister.getBankValue(0, 11) & 0b00000001); // INTCON
+		FileRegister.setDataInBank(11,
+				FileRegister.getBankValue(0, 11) & 0b00000001); // INTCON
 
 		FileRegister.setDataInBank(1, 1, 0b11111111); // Option_Reg
 		FileRegister.setDataInBank(1, 5, 0b00011111); // TRISA
@@ -40,49 +47,57 @@ public class Reset {
 		FileRegister.setDataInBank(1, 8, 0b00000000); // EECON1 ----- q
 
 	}
-	
-	public static void sleepReset() {
-		FileRegister.setDataInBank(2, Speicher.getPC() + 1);
-		FileRegister.setDataInBank(1, 8, FileRegister.getBankValue(1, 8) & 0b00001111); // EECON1
+
+	public static void sleepReset()
+	{
+		// FileRegister.setDataInBank(2, Speicher.getPC() + 1);
+		FileRegister.setDataInBank(1, 8,
+				FileRegister.getBankValue(1, 8) & 0b00001111); // EECON1
 	}
-	
-	
-	public static void MCLR() {
+
+	public static void MCLR()
+	{
 		normalReset();
 		if (Functions.isSleep()) {
-			FileRegister.setDataInBank(3, (FileRegister.getBankValue(0, 3) & 0b00000111) | 0b00010000); // Status
+			FileRegister.setDataInBank(3,
+					(FileRegister.getBankValue(0, 3) & 0b00000111) | 0b00010000); // Status
 		} else {
-			FileRegister.setDataInBank(3, FileRegister.getBankValue(0, 3) & 0b00011111); // Status
+			FileRegister.setDataInBank(3,
+					FileRegister.getBankValue(0, 3) & 0b00011111); // Status
 		}
 		Speicher.setPC(0);
 
 		Speicher.reload();
 	}
-	
-	public static void reloadRegister() {
+
+	public static void reloadRegister()
+	{
 		status = Speicher.getStatusRegister();
 		option = Speicher.getOptionReg();
 		intcon = Speicher.getIntconReg();
 	}
-	
-	public static void WDTReset() {
+
+	public static void WDTReset()
+	{
 		WatchDogTimer.resetTimer();
-		
-		if(Functions.isSleep()) {
+
+		if (Functions.isSleep()) {
 			Functions.setSleep(false);
 			sleepReset();
-			FileRegister.setDataInBank(3, FileRegister.getBankValue(0, 3) & 0b11100111 );
-			Speicher.setPC(Speicher.getPC() + 1);
-		}else {
+			FileRegister.setDataInBank(3,
+					FileRegister.getBankValue(0, 3) & 0b11100111);
+			// Speicher.setPC(Speicher.getPC() + 1);
+		} else {
 			normalReset();
-			FileRegister.setDataInBank(3, (FileRegister.getBankValue(0, 3) & 0b00000111) | 1 << 4)  ;
+			FileRegister.setDataInBank(3,
+					(FileRegister.getBankValue(0, 3) & 0b00000111) | 1 << 4);
 			Speicher.setPC(0);
 		}
-		
-		
+
 	}
-	
-	public static void Interrupt() {
+
+	public static void Interrupt()
+	{
 		sleepReset();
 		if (Functions.isSleep()) {
 			Functions.setSleep(false);
@@ -92,7 +107,8 @@ public class Reset {
 				Speicher.setPC(Speicher.getPC() + 1);
 			}
 
-			FileRegister.setDataInBank(3, (FileRegister.getBankValue(0, 3) & 0b11100111) | 0b00010000); // Status
+			FileRegister.setDataInBank(3,
+					(FileRegister.getBankValue(0, 3) & 0b11100111) | 0b00010000); // Status
 		}
 	}
 }
