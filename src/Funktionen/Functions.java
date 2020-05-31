@@ -124,6 +124,7 @@ public class Functions
 		Flags.checkFlagDC(w, fileReg[bankFlag][f]);
 		value = Alu.ALU(fileReg[bankFlag][f], d, f, "+");
 		Flags.checkFlagsCZ(value, false);
+		cycles++;
 	}
 
 	public static void ANDWF()
@@ -131,24 +132,28 @@ public class Functions
 
 		value = Alu.ALU(fileReg[bankFlag][f], d, f, "&");
 		Flags.checkFlagZ(value);
+		cycles++;
 	}
 
 	public static void CLRF()
 	{
 		value = Alu.ALU(0, 1, f, "");
 		Flags.checkFlagZ(value);
+		cycles++;
 	}
 
 	public static void CLRW()
 	{
 		value = Alu.ALU(0, 0, 0, "");
 		Flags.checkFlagZ(value);
+		cycles++;
 	}
 
 	public static void COMF()
 	{
 		value = Alu.ALU(fileReg[bankFlag][f], 0b1111111, d, f, "^");
 		Flags.checkFlagZ(value);
+		cycles++;
 	}
 
 	public static void DECF()
@@ -160,11 +165,12 @@ public class Functions
 	public static void DECFSZ()
 	{
 		value = Alu.ALU(fileReg[bankFlag][f], 1, d, f, "-");
-
+		cycles++;
 		if (value != 0) {
 
 		} else {
 			NOP();
+			cycles++;
 		}
 	}
 
@@ -172,22 +178,25 @@ public class Functions
 	{
 		value = Alu.ALU(fileReg[bankFlag][f], 1, d, f, "+");
 		Flags.checkFlagZ(value);
+		cycles++;
 	}
 
 	public static void IORWF()
 	{
 		value = Alu.ALU(fileReg[bankFlag][f], d, f, "|");
 		Flags.checkFlagZ(value);
+		cycles++;
 	}
 
 	public static void INCFSZ()
 	{
 		value = Alu.ALU(fileReg[bankFlag][f], 1, d, f, "+");
-
+		cycles++;
 		if (value != 0) {
 
 		} else {
 			NOP();
+			cycles++;
 		}
 	}
 
@@ -195,17 +204,20 @@ public class Functions
 	{
 		value = Alu.ALU(fileReg[bankFlag][f], d, f, "");
 		Flags.checkFlagZ(value);
+		cycles++;
 	}
 
 	public static void MOVWF()
 	{
 		MoveToFReg(f, w);
+		cycles++;
 
 	}
 
 	public static void NOP()
 	{
 		countPC();
+		
 	}
 
 	public static void RLF()
@@ -228,6 +240,7 @@ public class Functions
 
 		saveData(d, f, value);
 		Flags.setFlag(0, cFlag);
+		cycles++;
 	}
 
 	public static void RRF()
@@ -250,6 +263,7 @@ public class Functions
 
 		saveData(d, f, value);
 		Flags.setFlag(0, cFlag);
+		cycles++;
 	}
 
 	public static void SUBWF()
@@ -257,6 +271,7 @@ public class Functions
 		Flags.checkFlagDC(fileReg[bankFlag][f], Alu.zweierKomp(w));
 		value = Alu.ALU(fileReg[bankFlag][f], d, f, "-");
 		Flags.checkFlagsCZ(value, false);
+		cycles++;
 
 	}
 
@@ -271,12 +286,14 @@ public class Functions
 		value = upper | lower;
 
 		saveData(d, f, value);
+		cycles++;
 	}
 
 	public static void XORWF()
 	{
 		value = Alu.ALU(fileReg[bankFlag][f], d, f, "^");
 		Flags.checkFlagZ(value);
+		cycles++;
 	}
 
 	// Bit-Oriented Operations
@@ -289,6 +306,7 @@ public class Functions
 		value &= ~(1 << b);
 
 		saveData(1, f, value);
+		cycles++;
 
 	}
 
@@ -299,6 +317,8 @@ public class Functions
 		value |= 1 << b;
 
 		saveData(1, f, value);
+		
+		cycles++;
 
 	}
 
@@ -309,9 +329,10 @@ public class Functions
 		if (BigInteger.valueOf(value).testBit(b)) {
 
 		} else {
-			countPC();
+			NOP();
+			cycles++;
 		}
-
+		cycles++;
 	}
 
 	public static void BTFSS()
@@ -319,10 +340,12 @@ public class Functions
 
 		value = fileReg[bankFlag][f];
 		if (BigInteger.valueOf(value).testBit(b)) {
-			countPC();
+			NOP();
+			cycles++;
 		} else {
 
 		}
+		cycles++;
 	}
 
 	// Literal und Control Operations
@@ -335,6 +358,8 @@ public class Functions
 		value = Alu.ALU(k, 0, 0, "+");
 
 		Flags.checkFlagsCZ(value, false);
+		
+		cycles++;
 	}
 
 	public static void ANDLW()
@@ -345,6 +370,8 @@ public class Functions
 		value = Alu.ALU(k, 0, 0, "&");
 
 		Flags.checkFlagsCZ(value, false);
+		
+		cycles++;
 	}
 
 	public static void CALL()
@@ -360,6 +387,8 @@ public class Functions
 		pc = (pc | pclath);
 		Speicher.setPC(pc - 1); // Da der PC nach dem Befehl nochmal erhöht wird,
 										// rechnen wir hier -1
+		
+		cycles += 2;
 
 	}
 
@@ -371,6 +400,8 @@ public class Functions
 		int status = FileRegister.getBankValue(0, 3);
 		FileRegister.setDataInBank(1, 1, option & 0b11110111); // Clear PSA
 		FileRegister.setDataInBank(3, status | 0b00011000); // Set -TO and -PD
+		
+		cycles++;
 
 	}
 
@@ -385,6 +416,8 @@ public class Functions
 		pc = (pc | pclath);
 		Speicher.setPC(pc - 1); // Da der PC nach dem Befehl nochmal erhöht wird,
 										// rechnen wir hier -1
+		
+		cycles += 2;
 
 	}
 
@@ -394,11 +427,15 @@ public class Functions
 		value = Alu.ALU(k, 0, 0, "|");
 
 		Flags.checkFlagZ(value);
+		
+		cycles++;
 	}
 
 	public static void MOVLW()
 	{
 		Speicher.setWReg(k);
+		
+		cycles++;
 	}
 
 	public static void RETFIE()
@@ -407,6 +444,8 @@ public class Functions
 		Speicher.setPC(Stack.getStackValue() - 1);
 		FileRegister.setDataInBank(11,
 				FileRegister.getBankValue(0, 11) | 0b10000000); // GIE bit setzen
+		
+		cycles += 2;
 
 	}
 
@@ -415,6 +454,8 @@ public class Functions
 		Stack.setStackPointer(stackpointer - 1);
 		Speicher.setPC(Stack.getStackValue() - 1);
 		saveData(0, 0, k); // K ins W Register schreiben
+		
+		cycles += 2;
 
 	}
 
@@ -422,6 +463,8 @@ public class Functions
 	{
 		Stack.setStackPointer(stackpointer - 1);
 		Speicher.setPC(Stack.getStackValue());
+		
+		cycles += 2;
 
 	}
 
@@ -435,7 +478,7 @@ public class Functions
 		FileRegister.setDataInBank(1, 1, option & 0b11110111); // Clear PSA
 		FileRegister.setDataInBank(3, status | 0b00010000); // -TO setzen
 		FileRegister.setDataInBank(3, status & 0b11110111); // -PD l�schen
-
+		cycles++;
 	}
 
 	public static void SUBLW()
@@ -445,12 +488,16 @@ public class Functions
 		value = Alu.ALU(k, 0, 0, "-");
 
 		Flags.checkFlagsCZ(value, false);
+		
+		cycles++;
 	}
 
 	public static void XORLW()
 	{
 		value = Alu.ALU(k, 0, 0, "^");
 		Flags.checkFlagZ(value);
+		
+		cycles++;
 	}
 
 	protected static void reload()

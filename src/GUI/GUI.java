@@ -20,26 +20,29 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import DateiVerarbeitung.Parser;
 import Funktionen.Functions;
 import Speicher.FileRegister;
 import Speicher.Speicher;
 import Speicher.Stack;
+import Laufzeit.Timer;
+import Laufzeit.WatchDogTimer;
+import Laufzeit.Laufzeit;
 
-public class GUI implements ActionListener
-{
+public class GUI implements ActionListener {
 
 	static int[][] rams = FileRegister.getFReg();
 
-	static String datei = "src\\LST_Files\\TPicSim2.LST";
+	static String datei = "src\\LST_Files\\TPicSim14.LST";
 
 	static JFrame frame;
 
 	static JLabel wRegLabel;
 
 	static JLabel wRegTitle;
-	
+
 	static JTable lstFile;
 
 	JPanel buttonPanel = new JPanel();
@@ -53,6 +56,8 @@ public class GUI implements ActionListener
 	JLabel watchDogLabel = new JLabel();
 
 	JPanel watchDogPanel = new JPanel();
+
+	JPanel timerPanel = new JPanel();
 
 	static String[] stackColumnNames = { "Index", "Value" };
 	// Speicher speicher = new Speicher();
@@ -69,8 +74,30 @@ public class GUI implements ActionListener
 	static JRadioButton watchDogON = new JRadioButton("Ein");
 
 	static JRadioButton watchDogOFF = new JRadioButton("Aus");
-	
-	
+
+	static JLabel laufzeit = new JLabel("Laufzeit Zähler");
+
+	static JLabel frequenz = new JLabel("Quarzfrequenz");
+
+	static JLabel timer = new JLabel("Timer");
+
+	static JLabel timerMax = new JLabel("Timer Max");
+
+	static JLabel watchDogTimer = new JLabel("Watchdogtimer");
+
+	static JLabel watchDogTimerMax = new JLabel("Watchdogtimer Max");
+
+	static JLabel laufzeitValue = new JLabel(Integer.toString(Laufzeit.getLaufzeitzaehler()));
+
+	static JTextField frequenzValue = new JTextField(Integer.toString(Laufzeit.getFrequenz()));
+
+	static JLabel timerValue = new JLabel(Integer.toString(Timer.getTimer()));
+
+	static JLabel timerMaxValue = new JLabel(Integer.toString(Timer.getTimerMax()));
+
+	static JLabel watchDogTimerValue = new JLabel(Integer.toString(WatchDogTimer.getWatchdogTimer()));
+
+	static JLabel watchDogTimerMaxValue = new JLabel(Integer.toString(WatchDogTimer.getMaxTime()));
 
 	ButtonGroup watchDog = new ButtonGroup();
 
@@ -184,29 +211,21 @@ public class GUI implements ActionListener
 
 	protected JLabel CText = new JLabel("C");
 
-	protected static JLabel IRPNumberText = new JLabel(
-			Integer.toString(statusReg[0]));
+	protected static JLabel IRPNumberText = new JLabel(Integer.toString(statusReg[0]));
 
-	protected static JLabel RP1NumberText = new JLabel(
-			Integer.toString(statusReg[1]));
+	protected static JLabel RP1NumberText = new JLabel(Integer.toString(statusReg[1]));
 
-	protected static JLabel RP0NumberText = new JLabel(
-			Integer.toString(statusReg[2]));
+	protected static JLabel RP0NumberText = new JLabel(Integer.toString(statusReg[2]));
 
-	protected static JLabel TONumberText = new JLabel(
-			Integer.toString(statusReg[3]));
+	protected static JLabel TONumberText = new JLabel(Integer.toString(statusReg[3]));
 
-	protected static JLabel PDNumberText = new JLabel(
-			Integer.toString(statusReg[4]));
+	protected static JLabel PDNumberText = new JLabel(Integer.toString(statusReg[4]));
 
-	protected static JLabel ZNumberText = new JLabel(
-			Integer.toString(statusReg[5]));
+	protected static JLabel ZNumberText = new JLabel(Integer.toString(statusReg[5]));
 
-	protected static JLabel DCNumberText = new JLabel(
-			Integer.toString(statusReg[6]));
+	protected static JLabel DCNumberText = new JLabel(Integer.toString(statusReg[6]));
 
-	protected static JLabel CNumberText = new JLabel(
-			Integer.toString(statusReg[7]));
+	protected static JLabel CNumberText = new JLabel(Integer.toString(statusReg[7]));
 
 	protected JLabel RPUText = new JLabel("RPU");
 
@@ -224,29 +243,21 @@ public class GUI implements ActionListener
 
 	protected JLabel PS0Text = new JLabel("PS0");
 
-	protected static JLabel RPUNumberText = new JLabel(
-			Integer.toString(optionReg[0]));
+	protected static JLabel RPUNumberText = new JLabel(Integer.toString(optionReg[0]));
 
-	protected static JLabel IEGNumberText = new JLabel(
-			Integer.toString(optionReg[1]));
+	protected static JLabel IEGNumberText = new JLabel(Integer.toString(optionReg[1]));
 
-	protected static JLabel TCSNumberText = new JLabel(
-			Integer.toString(optionReg[2]));
+	protected static JLabel TCSNumberText = new JLabel(Integer.toString(optionReg[2]));
 
-	protected static JLabel TSENumberText = new JLabel(
-			Integer.toString(optionReg[3]));
+	protected static JLabel TSENumberText = new JLabel(Integer.toString(optionReg[3]));
 
-	protected static JLabel PSANumberText = new JLabel(
-			Integer.toString(optionReg[4]));
+	protected static JLabel PSANumberText = new JLabel(Integer.toString(optionReg[4]));
 
-	protected static JLabel PS2NumberText = new JLabel(
-			Integer.toString(optionReg[5]));
+	protected static JLabel PS2NumberText = new JLabel(Integer.toString(optionReg[5]));
 
-	protected static JLabel PS1NumberText = new JLabel(
-			Integer.toString(optionReg[6]));
+	protected static JLabel PS1NumberText = new JLabel(Integer.toString(optionReg[6]));
 
-	protected static JLabel PS0NumberText = new JLabel(
-			Integer.toString(optionReg[7]));
+	protected static JLabel PS0NumberText = new JLabel(Integer.toString(optionReg[7]));
 
 	protected JLabel GIEText = new JLabel("GIE");
 
@@ -264,32 +275,23 @@ public class GUI implements ActionListener
 
 	protected JLabel RIFText = new JLabel("RIF");
 
-	protected static JLabel GIENumberText = new JLabel(
-			Integer.toString(intconReg[0]));
+	protected static JLabel GIENumberText = new JLabel(Integer.toString(intconReg[0]));
 
-	protected static JLabel EIENumberText = new JLabel(
-			Integer.toString(intconReg[1]));
+	protected static JLabel EIENumberText = new JLabel(Integer.toString(intconReg[1]));
 
-	protected static JLabel TIENumberText = new JLabel(
-			Integer.toString(intconReg[2]));
+	protected static JLabel TIENumberText = new JLabel(Integer.toString(intconReg[2]));
 
-	protected static JLabel IENumberText = new JLabel(
-			Integer.toString(intconReg[3]));
+	protected static JLabel IENumberText = new JLabel(Integer.toString(intconReg[3]));
 
-	protected static JLabel RIENumberText = new JLabel(
-			Integer.toString(intconReg[4]));
+	protected static JLabel RIENumberText = new JLabel(Integer.toString(intconReg[4]));
 
-	protected static JLabel TIFNumberText = new JLabel(
-			Integer.toString(intconReg[5]));
+	protected static JLabel TIFNumberText = new JLabel(Integer.toString(intconReg[5]));
 
-	protected static JLabel IFNumberText = new JLabel(
-			Integer.toString(intconReg[6]));
+	protected static JLabel IFNumberText = new JLabel(Integer.toString(intconReg[6]));
 
-	protected static JLabel RIFNumberText = new JLabel(
-			Integer.toString(intconReg[7]));
+	protected static JLabel RIFNumberText = new JLabel(Integer.toString(intconReg[7]));
 
-	private static String[][] loadFile(String datei)
-	{ // Datei ins programm laden/einlesen
+	private static String[][] loadFile(String datei) { // Datei ins programm laden/einlesen
 		File file = new File(datei);
 
 		String[][] test = new String[150][150];
@@ -301,7 +303,7 @@ public class GUI implements ActionListener
 		String kommentar;
 
 		if (!file.canRead() || !file.isFile()) { // überprüfen ob Datei exisitiert
-																// und gelesen werden kann
+													// und gelesen werden kann
 			return yeet;
 		}
 		try {
@@ -341,35 +343,26 @@ public class GUI implements ActionListener
 		return yeet;
 	}
 
-	public static void Stack()
-	{
+	public static void Stack() {
 		int[] tempStack = Stack.getStack();
-		String[][] stackArray = { { "0", Integer.toString(tempStack[0]) },
-				{ "1", Integer.toString(tempStack[1]) },
-				{ "2", Integer.toString(tempStack[2]) },
-				{ "3", Integer.toString(tempStack[3]) },
-				{ "4", Integer.toString(tempStack[4]) },
-				{ "5", Integer.toString(tempStack[5]) },
-				{ "6", Integer.toString(tempStack[6]) },
-				{ "7", Integer.toString(tempStack[7]) } };
+		String[][] stackArray = { { "0", Integer.toString(tempStack[0]) }, { "1", Integer.toString(tempStack[1]) },
+				{ "2", Integer.toString(tempStack[2]) }, { "3", Integer.toString(tempStack[3]) },
+				{ "4", Integer.toString(tempStack[4]) }, { "5", Integer.toString(tempStack[5]) },
+				{ "6", Integer.toString(tempStack[6]) }, { "7", Integer.toString(tempStack[7]) } };
 
 		stack = new JTable(stackArray, stackColumnNames);
 
 	}
 
-	public static String leadingZero(int number)
-	{
-		return (number < 16 ? "0" : "")
-				+ Integer.toHexString(number).toUpperCase();
+	public static String leadingZero(int number) {
+		return (number < 16 ? "0" : "") + Integer.toHexString(number).toUpperCase();
 	}
 
-	public static void initializeFileReg()
-	{
-
+	public static void initializeFileReg() {
+		fileRegTP = null;
 		fileRegTP = new JTabbedPane();
 
-		String[] fileRegisterColum = { "", "00", "10", "20", "30", "40", "50",
-				"60", "70" };
+		String[] fileRegisterColum = { "", "00", "10", "20", "30", "40", "50", "60", "70" };
 
 		String[][] fileData0 = new String[16][9];
 		String[][] fileData1 = new String[16][9];
@@ -385,10 +378,8 @@ public class GUI implements ActionListener
 		int columnMultiplicator = 0;
 		for (int i = 0; i < rams[0].length; i++) {
 
-			fileData0[i % 16][columnMultiplicator + 1] = leadingZero(
-					FileRegister.getBankValue(0, i));
-			fileData1[i % 16][columnMultiplicator + 1] = leadingZero(
-					FileRegister.getBankValue(1, i));
+			fileData0[i % 16][columnMultiplicator + 1] = leadingZero(FileRegister.getBankValue(0, i));
+			fileData1[i % 16][columnMultiplicator + 1] = leadingZero(FileRegister.getBankValue(1, i));
 
 			if (i % 16 == 15 && i > 0) {
 				columnMultiplicator++;
@@ -408,12 +399,16 @@ public class GUI implements ActionListener
 
 		frame.getContentPane().add(fileRegTP);
 
+		if (fileRegTP != null)
+			fileRegTP.repaint();
+
 	}
 
-	public GUI()
-	{
+	public GUI() {
 		Speicher.reset();
 		// frame();
+		
+		
 
 		frame = new JFrame("Pic");
 
@@ -432,8 +427,6 @@ public class GUI implements ActionListener
 		frame.add(wRegTitle);
 
 		frame.add(wRegLabel);
-
-		
 
 		// Action listener Test
 		ActionListener actionListener = new ActionHandler();
@@ -470,8 +463,7 @@ public class GUI implements ActionListener
 		// JTable
 
 		// Column Names
-		String[] lstColumnNames = { "Adresse", "Code", "Zeile", "Start/Ende",
-				"Kommentar" };
+		String[] lstColumnNames = { "Adresse", "Code", "Zeile", "Start/Ende", "Kommentar" };
 
 		Stack();
 
@@ -498,10 +490,25 @@ public class GUI implements ActionListener
 		watchDogPanel.add(watchDogOFF);
 		watchDogPanel.add(watchDogON);
 		watchDogPanel.add(watchDogLabel);
+		
+		watchDogON.setSelected(!WatchDogTimer.isEnabled());
+
+		timerPanel.add(laufzeit);
+		timerPanel.add(frequenz);
+		timerPanel.add(timer);
+		timerPanel.add(timerMax);
+		timerPanel.add(watchDogTimer);
+		timerPanel.add(watchDogTimerMax);
+
+		timerPanel.add(laufzeitValue);
+		timerPanel.add(frequenzValue);
+		timerPanel.add(timerValue);
+		timerPanel.add(timerMaxValue);
+		timerPanel.add(watchDogTimerValue);
+		timerPanel.add(watchDogTimerMaxValue);
 
 		ActionListener buttonListener = new ButtonHandler();
-		
-		
+
 		watchDogON.addActionListener(buttonListener);
 		watchDogOFF.addActionListener(buttonListener);
 
@@ -535,7 +542,6 @@ public class GUI implements ActionListener
 		pinAPanel.add(pinRA2IO);
 		pinAPanel.add(pinRA3IO);
 		pinAPanel.add(pinRA4IO);
-		
 
 		pinBPanel.add(pinRB0IO);
 		pinBPanel.add(pinRB1IO);
@@ -545,7 +551,6 @@ public class GUI implements ActionListener
 		pinBPanel.add(pinRB5IO);
 		pinBPanel.add(pinRB6IO);
 		pinBPanel.add(pinRB7IO);
-		
 
 		// Adding to bitpanel
 		bitPanel.add(statusText);
@@ -728,6 +733,22 @@ public class GUI implements ActionListener
 
 		stackText.setBounds(830, 20, 50, 10);
 
+		laufzeit.setBounds(0, 0, 100, 20);
+		frequenz.setBounds(0, 20, 100, 20);
+		timer.setBounds(0, 40, 100, 20);
+		timerMax.setBounds(0, 60, 100, 20);
+		watchDogTimer.setBounds(0, 80, 100, 20);
+		watchDogTimerMax.setBounds(0, 100, 120, 20);
+
+		laufzeitValue.setBounds(150, 0, 50, 20);
+		frequenzValue.setBounds(150, 20, 50, 20);
+		timerValue.setBounds(150, 40, 50, 20);
+		timerMaxValue.setBounds(150, 60, 50, 20);
+		watchDogTimerValue.setBounds(150, 80, 50, 20);
+		watchDogTimerMaxValue.setBounds(150, 100, 50, 20);
+
+		timerPanel.setBounds(1000, 40, 200, 150);
+
 		// Color
 		start.setBackground(new Color(0, 120, 0));
 		load.setBackground(new Color(255, 0, 0));
@@ -737,6 +758,7 @@ public class GUI implements ActionListener
 
 		initializeFileReg();
 
+		frame.add(timerPanel);
 		frame.add(stackText);
 		frame.add(buttonPanel);
 		frame.add(pinAPanel);
@@ -754,6 +776,7 @@ public class GUI implements ActionListener
 		// Layout
 
 		watchDogPanel.setLayout(null);
+		timerPanel.setLayout(null);
 		// stack.setLayout(null);
 		bitPanel.setLayout(null);
 		buttonPanel.setLayout(null);
@@ -764,8 +787,7 @@ public class GUI implements ActionListener
 
 	}
 
-	public static void step()
-	{
+	public static void step() {
 		Functions.run();
 		try {
 			Thread.sleep(20);
@@ -777,8 +799,7 @@ public class GUI implements ActionListener
 		Reloads.ReloadGUI();
 	}
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		new GUI();
 		readFile();
 		Reloads.ReloadAttributes();
@@ -786,16 +807,14 @@ public class GUI implements ActionListener
 
 	}
 
-	public static void readFile()
-	{
+	public static void readFile() {
 		Parser p = new Parser();
 		p.setFile(datei);
 		p.read();
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0)
-	{
+	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 
 	}

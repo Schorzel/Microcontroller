@@ -1,5 +1,8 @@
 package GUI;
 
+import Laufzeit.Laufzeit;
+import Laufzeit.Timer;
+import Laufzeit.WatchDogTimer;
 import Speicher.FileRegister;
 import Speicher.Speicher;
 import Speicher.Stack;
@@ -15,6 +18,7 @@ public class Reloads extends GUI {
 		initializeFileReg();
 
 		setMarker();
+		reloadTimer();
 
 		IRPNumberText.setText(Integer.toString(statusReg[0]));
 		RP1NumberText.setText(Integer.toString(statusReg[1]));
@@ -115,20 +119,33 @@ public class Reloads extends GUI {
 		pinRB7IO.setEnabled(pinRB7.isSelected());
 
 	}
+	
+	public static void reloadTimer() {
+		
+
+		laufzeitValue.setText(Integer.toString(Laufzeit.getLaufzeitzaehler()));
+		frequenzValue.setText(Integer.toString(Laufzeit.getFrequenz()));
+		timerValue.setText(Integer.toString(Timer.getTimer()));
+		timerMaxValue.setText(Integer.toString(Timer.getTimerMax()));
+		watchDogTimerValue.setText(Integer.toString(WatchDogTimer.getWatchdogTimer()));
+		watchDogTimerMaxValue.setText(Integer.toString(WatchDogTimer.getMaxTime()));
+	}
 
 	public static void setMarker() {
+
+
 		for (int i = 0; i < lstFile.getRowCount(); i++) {
 			String row = (String) lstFile.getValueAt(i, 0);
 			if (row != null) {
 
 				if (!row.equals("    ")) {
 
-					if (Speicher.getPC() == Integer.parseInt(row)) {
+					if (Speicher.getPC() == Integer.parseInt(row, 16)) {
 						lstFile.setRowSelectionInterval(i, i);
 					}
 				}
 			}
 		}
-	}
 
+	}
 }

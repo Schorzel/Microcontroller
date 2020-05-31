@@ -1,7 +1,6 @@
 package Speicher;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import Laufzeit.Laufzeit;
 import Laufzeit.Reset;
@@ -175,56 +174,56 @@ public class Speicher
 		wReg = value;
 	}
 
-	public static void setPins(int AB, int bit, int state)
+	public static void setPinsIO(int AB, int bit, int state)
 	{
 		if (AB == 0) {
 			portPinA[bit] = state;
-//			
-//			String value = "";
-//			
-//			for(int i = portPinA.length-1;i >= 0;i--) {
-//				value += Integer.toString(portPinA[i]);
-//			}
-//			
-//			FileRegister.setDataInBank(0, 5, Integer.parseInt(value,2));
+			
+			String value = "";
+	
+			for(int i = 3;i < 8;i++) {
+				value += Integer.toString(portPinA[i]);
+			}
+
+			FileRegister.setDataInBank(0, 5, Integer.parseInt(value,2));
 			
 
 			
 		} else {
 			portPinB[bit] = state;
 			
-//			String value = "";
-//			
-//			for(int i = portPinB.length-1;i >= 0;i--) {
-//				value += Integer.toString(portPinB[i]);
-//			}
-//			
-//			FileRegister.setDataInBank(0, 6, Integer.parseInt(value,2));
+			String value = "";
+
+			for(int i = 0;i < 8;i++) {
+				value += Integer.toString(portPinB[i]);
+			}
+			
+			FileRegister.setDataInBank(0, 6, Integer.parseInt(value,2));
 		}
 	}
 
-	public static void setPinsIO(int AB, int bit, int state)
+	public static void setPins(int AB, int bit, int state)
 	{
 		if (AB == 0) {
 			tristPinA[bit] = state;
 			
-//			String value = "";
-//			
-//			for(int i = tristPinA.length-1;i >= 0;i--) {
-//				value += Integer.toString(tristPinA[i]);
-//			}
-//			
-//			FileRegister.setDataInBank(1, 5, Integer.parseInt(value,2));
+			String value = "";
+
+			for(int i = 3;i < 8;i++) {
+				value += Integer.toString(tristPinA[i]);
+			}
+
+			FileRegister.setDataInBank(1, 5, Integer.parseInt(value,2));
 		} else {
 			tristPinB[bit] = state;
 			
-//			String value = "";
-//			
-//			for(int i = tristPinB.length-1;i >= 0;i--) {
-//				value += Integer.toString(tristPinB[i]);
-//			}
-//			
-//			FileRegister.setDataInBank(1, 6, Integer.parseInt(value,2));
+			String value = "";
+
+			for(int i = 0;i < 8;i++) {
+				value += Integer.toString(tristPinB[i]);
+			}
+	
+			FileRegister.setDataInBank(1, 6, Integer.parseInt(value,2));
 		}
 	}
 
