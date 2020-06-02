@@ -1,5 +1,10 @@
 package GUI;
 
+import java.io.File;
+
+import javax.swing.JTable;
+
+import DateiVerarbeitung.Parser;
 import Laufzeit.Laufzeit;
 import Laufzeit.Timer;
 import Laufzeit.WatchDogTimer;
@@ -10,7 +15,13 @@ import Speicher.Stack;
 public class Reloads extends GUI {
 
 	public static void ReloadGUI() {
-
+		
+		
+		
+		
+		
+		
+		
 		reloadStack();
 
 		reloadPins();
@@ -18,7 +29,10 @@ public class Reloads extends GUI {
 		initializeFileReg();
 
 		setMarker();
+		
 		reloadTimer();
+		
+		GUI.lstFileTable();
 
 		IRPNumberText.setText(Integer.toString(statusReg[0]));
 		RP1NumberText.setText(Integer.toString(statusReg[1]));
@@ -46,8 +60,24 @@ public class Reloads extends GUI {
 		TIFNumberText.setText(Integer.toString(intconReg[5]));
 		IFNumberText.setText(Integer.toString(intconReg[6]));
 		RIFNumberText.setText(Integer.toString(intconReg[7]));
+		
+		optionValue.setText(Integer.toHexString(rams[1][1]));
+		
+		statusValue.setText(Integer.toHexString(rams[1][3]));
+		
+		intconValue.setText(Integer.toHexString(rams[1][11]));
 
 		wRegLabel.setText(Integer.toHexString(Speicher.getwReg()));
+		fsrValue.setText(Integer.toHexString(rams[0][4]));
+		pclValue.setText(Integer.toHexString(Speicher.getPCL()));
+		pclathValue.setText(Integer.toHexString(Speicher.getPCLATH()));
+		pcValue.setText(Integer.toHexString(Speicher.getPC()));
+		
+		
+		
+		
+		
+		
 	}
 
 	public static void ReloadAttributes() {
@@ -135,7 +165,7 @@ public class Reloads extends GUI {
 
 
 		for (int i = 0; i < lstFile.getRowCount(); i++) {
-			String row = (String) lstFile.getValueAt(i, 0);
+			String row = (String) lstFile.getValueAt(i, 1);
 			if (row != null) {
 
 				if (!row.equals("    ")) {

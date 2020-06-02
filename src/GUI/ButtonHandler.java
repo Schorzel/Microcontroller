@@ -2,11 +2,16 @@ package GUI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JRadioButton;
+import javax.swing.JTable;
 
+import DateiVerarbeitung.Parser;
 import Laufzeit.WatchDogTimer;
+import Speicher.Speicher;
 
 public class ButtonHandler implements ActionListener {
 
@@ -27,6 +32,8 @@ public class ButtonHandler implements ActionListener {
 		}
 
 		else {
+			
+			final JFileChooser fc = new JFileChooser("C:\\Users\\Super\\git\\Microcontroller\\src\\LST_Files");
 
 			JButton button = (JButton) event.getSource();
 
@@ -58,6 +65,26 @@ public class ButtonHandler implements ActionListener {
 			}
 			if (button == GUI.step) {
 				GUI.step();
+			}
+			
+			if(button == GUI.load) {
+			
+				
+				if(fc.showOpenDialog(fc) == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					
+					GUI.datei = (fc.getSelectedFile().getAbsolutePath());
+					
+					GUI.readFile(fc.getSelectedFile().getPath());
+					
+					
+					
+				
+
+					
+					
+					
+				}
 			}
 		}
 	}

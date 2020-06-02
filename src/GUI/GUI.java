@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import DateiVerarbeitung.Parser;
 import Funktionen.Functions;
@@ -35,15 +36,47 @@ public class GUI implements ActionListener {
 
 	static int[][] rams = FileRegister.getFReg();
 
-	static String datei = "src\\LST_Files\\TPicSim14.LST";
+	static String datei = "C:\\Users\\Super\\git\\Microcontroller\\src\\LST_Files\\TPicSim1.LST";
+	
+	static String[][] dateiLST;
 
 	static JFrame frame;
+	
+	static Parser parser;
+
+	static String[] lstColumnNames = { "BP","Adresse", "Code", "Zeile", "Start/Ende", "Kommentar" };
 
 	static JLabel wRegLabel;
 
 	static JLabel wRegTitle;
 
+	static JLabel fsr;
+
+	static JLabel fsrValue;
+
+	static JLabel pcl;
+
+	static JLabel pclValue;
+
+	static JLabel pclath;
+
+	static JLabel pclathValue;
+
+	static JLabel pcLabel;
+
+	static JLabel pcValue;
+
+	static JLabel statusValue;
+
+	static JLabel optionValue;
+
+	static JLabel intconValue;
+
+	static JPanel functionRegisterPanel = new JPanel();
+
 	static JTable lstFile;
+
+	static File file;
 
 	JPanel buttonPanel = new JPanel();
 
@@ -291,10 +324,10 @@ public class GUI implements ActionListener {
 
 	protected static JLabel RIFNumberText = new JLabel(Integer.toString(intconReg[7]));
 
-	private static String[][] loadFile(String datei) { // Datei ins programm laden/einlesen
+	static String[][] loadFile(String datei) { // Datei ins programm laden/einlesen
 		File file = new File(datei);
 
-		String[][] test = new String[150][150];
+		String[][] test = new String[350][350];
 		String[][] yeet = new String[1][1];
 		String befehlsAdresse;
 		String befehlsCode;
@@ -325,11 +358,11 @@ public class GUI implements ActionListener {
 					startEnde = zeile.substring(27, zeile.length());
 				}
 
-				test[i][0] = befehlsAdresse;
-				test[i][1] = befehlsCode;
-				test[i][2] = zeilenNummer;
-				test[i][3] = startEnde;
-				test[i][4] = kommentar;
+				test[i][1] = befehlsAdresse;
+				test[i][2] = befehlsCode;
+				test[i][3] = zeilenNummer;
+				test[i][4] = startEnde;
+				test[i][5] = kommentar;
 			}
 			buffer.close();
 			return test;
@@ -341,6 +374,10 @@ public class GUI implements ActionListener {
 			System.out.println("IO Error");
 		}
 		return yeet;
+	}
+
+	public static void lstFileTable() {
+	
 	}
 
 	public static void Stack() {
@@ -407,8 +444,6 @@ public class GUI implements ActionListener {
 	public GUI() {
 		Speicher.reset();
 		// frame();
-		
-		
 
 		frame = new JFrame("Pic");
 
@@ -422,11 +457,58 @@ public class GUI implements ActionListener {
 
 		wRegTitle = new JLabel("W-Register");
 
-		wRegTitle.setBounds(870, 210, 100, 20);
+		fsr = new JLabel("FSR");
 
-		frame.add(wRegTitle);
+		pcl = new JLabel("PCL");
 
-		frame.add(wRegLabel);
+		pclath = new JLabel("PCLATH");
+
+		pcLabel = new JLabel("PC");
+
+		fsrValue = new JLabel("0");
+
+		pclValue = new JLabel("0");
+
+		pclathValue = new JLabel("0");
+
+		pcValue = new JLabel("0");
+
+		statusValue = new JLabel("0");
+
+		optionValue = new JLabel("0");
+
+		intconValue = new JLabel("0");
+
+		functionRegisterPanel.setBounds(870, 210, 500, 100);
+
+		functionRegisterPanel.add(fsr);
+		functionRegisterPanel.add(fsrValue);
+		functionRegisterPanel.add(pcl);
+		functionRegisterPanel.add(pclValue);
+		functionRegisterPanel.add(pclath);
+		functionRegisterPanel.add(pclathValue);
+		functionRegisterPanel.add(pcLabel);
+		functionRegisterPanel.add(pcValue);
+		functionRegisterPanel.add(wRegTitle);
+		functionRegisterPanel.add(wRegLabel);
+		
+		
+
+
+		wRegTitle.setBounds(0, 0, 80, 20);
+		wRegLabel.setBounds(25, 30, 20, 10);
+
+		fsr.setBounds(80, 0, 100, 20);
+		fsrValue.setBounds(90, 30, 20, 10);
+
+		pcl.setBounds(120, 0, 100, 20);
+		pclValue.setBounds(125, 30, 20, 10);
+
+		pclath.setBounds(160, 0, 100, 20);
+		pclathValue.setBounds(175, 30, 20, 10);
+
+		pcLabel.setBounds(220, 0, 100, 20);
+		pcValue.setBounds(225, 30, 20, 10);
 
 		// Action listener Test
 		ActionListener actionListener = new ActionHandler();
@@ -461,27 +543,35 @@ public class GUI implements ActionListener {
 		pinRB7IO.addActionListener(actionListener);
 
 		// JTable
+		
+		dateiLST = loadFile(datei);
+		
+		lstFile = new JTable(dateiLST, lstColumnNames);
+		
+		
+		
+		
+		lstFile.getColumnModel().getColumn(1).setPreferredWidth(55);
+		lstFile.getColumnModel().getColumn(2).setPreferredWidth(50);
+		lstFile.getColumnModel().getColumn(3).setPreferredWidth(50);
+		lstFile.getColumnModel().getColumn(4).setPreferredWidth(70);
+		lstFile.getColumnModel().getColumn(5).setPreferredWidth(500);
+		// lstFile.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		lstFile.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+
+
+		// lstFile.setBounds(0,0,700,600);
+
 
 		// Column Names
-		String[] lstColumnNames = { "Adresse", "Code", "Zeile", "Start/Ende", "Kommentar" };
 
 		Stack();
 
-		lstFile = new JTable(loadFile(datei), lstColumnNames);
-
-		// lstFile.setBounds(0,0,700,600);
+		lstFileTable();
 
 		JScrollPane stackSP = new JScrollPane(stack);
 
 		JScrollPane lstFileSP = new JScrollPane(lstFile);
-
-		lstFile.getColumnModel().getColumn(0).setPreferredWidth(55);
-		lstFile.getColumnModel().getColumn(1).setPreferredWidth(50);
-		lstFile.getColumnModel().getColumn(2).setPreferredWidth(50);
-		lstFile.getColumnModel().getColumn(3).setPreferredWidth(70);
-		lstFile.getColumnModel().getColumn(4).setPreferredWidth(500);
-		// lstFile.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		lstFile.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
 		// Adding
 
@@ -490,7 +580,7 @@ public class GUI implements ActionListener {
 		watchDogPanel.add(watchDogOFF);
 		watchDogPanel.add(watchDogON);
 		watchDogPanel.add(watchDogLabel);
-		
+
 		watchDogON.setSelected(!WatchDogTimer.isEnabled());
 
 		timerPanel.add(laufzeit);
@@ -611,6 +701,10 @@ public class GUI implements ActionListener {
 		bitPanel.add(IFNumberText);
 		bitPanel.add(RIFNumberText);
 
+		bitPanel.add(statusValue);
+		bitPanel.add(optionValue);
+		bitPanel.add(intconValue);
+
 		// Position and Size
 		portAText.setBounds(150, 5, 50, 30);
 		portBText.setBounds(270, 5, 50, 30);
@@ -680,6 +774,8 @@ public class GUI implements ActionListener {
 		DCNumberText.setBounds(250, 30, 30, 20);
 		CNumberText.setBounds(280, 30, 30, 20);
 
+		statusValue.setBounds(30, 30, 30, 20);
+
 		RPUText.setBounds(70, 60, 30, 20);
 		IEGText.setBounds(100, 60, 30, 20);
 		TCSText.setBounds(130, 60, 30, 20);
@@ -697,6 +793,8 @@ public class GUI implements ActionListener {
 		PS2NumberText.setBounds(220, 80, 30, 20);
 		PS1NumberText.setBounds(250, 80, 30, 20);
 		PS0NumberText.setBounds(280, 80, 30, 20);
+
+		optionValue.setBounds(30, 80, 30, 20);
 
 		GIEText.setBounds(70, 110, 30, 20);
 		EIEText.setBounds(100, 110, 30, 20);
@@ -716,7 +814,9 @@ public class GUI implements ActionListener {
 		IFNumberText.setBounds(250, 130, 30, 20);
 		RIFNumberText.setBounds(280, 130, 30, 20);
 
-		bitPanel.setBounds(400, 30, 310, 150);
+		intconValue.setBounds(30, 130, 30, 20);
+
+		bitPanel.setBounds(400, 30, 310, 160);
 
 		// RadioButton WatchDog
 		watchDogON.setBounds(0, 25, 50, 25);
@@ -727,9 +827,9 @@ public class GUI implements ActionListener {
 		watchDog.add(watchDogON);
 		watchDog.add(watchDogOFF);
 
-		lstFileSP.setBounds(20, 200, 700, 400);
-
 		stackSP.setBounds(750, 40, 200, 151);
+
+		lstFileSP.setBounds(20, 200, 700, 400);
 
 		stackText.setBounds(830, 20, 50, 10);
 
@@ -757,7 +857,7 @@ public class GUI implements ActionListener {
 		bitPanel.setBorder(BorderFactory.createTitledBorder("Bit"));
 
 		initializeFileReg();
-
+		frame.add(functionRegisterPanel);
 		frame.add(timerPanel);
 		frame.add(stackText);
 		frame.add(buttonPanel);
@@ -774,7 +874,7 @@ public class GUI implements ActionListener {
 		frame.add(stackSP);
 
 		// Layout
-
+		functionRegisterPanel.setLayout(null);
 		watchDogPanel.setLayout(null);
 		timerPanel.setLayout(null);
 		// stack.setLayout(null);
@@ -801,17 +901,53 @@ public class GUI implements ActionListener {
 
 	public static void main(String[] args) {
 		new GUI();
-		readFile();
+		readFile(datei);
 		Reloads.ReloadAttributes();
 		Reloads.ReloadGUI();
 
 	}
 
-	public static void readFile() {
+	public static void readFile(String file) {
+	
+		
+		dateiLST = loadFile(datei);
+		
+		for(int i = 0;i < dateiLST.length; i++) {
+			for(int j = 0;j < 6; j++) {
+				lstFile.setValueAt(dateiLST[i][j], i, j);
+			}
+		}
+		
+		
+//		for (int i = 0; i < lstFile.getRowCount(); i++) {
+//			String row = (String) lstFile.getValueAt(i, 1);
+//			if (row != null) {
+//
+//				if (!row.equals("    ")) {
+//
+//					if (Speicher.getPC() == Integer.parseInt(row, 16)) {
+//						lstFile.setValueAt(Boolean.FALSE, i, 0);
+//					}
+//				}
+//			}
+//		}
+		
+	
+		
+		
+		Speicher.reset();
+		
+		System.out.println("LST Datei: "+datei.substring(49));
+		
+		Reloads.ReloadGUI();
+		
+		lstFile.repaint();
 		Parser p = new Parser();
 		p.setFile(datei);
 		p.read();
 	}
+	
+	
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
