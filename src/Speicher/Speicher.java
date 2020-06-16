@@ -148,7 +148,7 @@ public class Speicher
 		programmspeicher[adresse] = befehlscode;
 	}
 
-	// Break Points Setter
+	//Erstellt einen Breakpoint an der entsprechenden Stelle im Programmspeicher
 	public static void setBreakPoint(int pc)
 	{
 		if (breakPoints[pc] != true) {
@@ -158,6 +158,7 @@ public class Speicher
 		}
 	}
 
+	//Holt den Wert des Bankflags aus dem Statusregister. 0 = Bank0, 1 = Bank1
 	public static void setBankFlag()
 	{
 		bankFlag = statusRegister[2];
@@ -174,6 +175,7 @@ public class Speicher
 		wReg = value;
 	}
 
+	//Setzt das entsprechende A IO oder B IO  Bit auf 0 oder 1
 	public static void setPinsIO(int AB, int bit, int state)
 	{
 		if (AB == 0) {
@@ -202,6 +204,7 @@ public class Speicher
 		}
 	}
 
+	//Setzt das entsprechende A  oder B Bit auf 0 oder 1
 	public static void setPins(int AB, int bit, int state)
 	{
 		if (AB == 0) {
@@ -227,6 +230,7 @@ public class Speicher
 		}
 	}
 
+	//Lädt das übergeben Regiser neu
 	public static void reloadArrayRegister(String command)
 	{
 
@@ -325,6 +329,7 @@ public class Speicher
 		FileRegister.setDataInBank(2, PCL);
 	}
 
+	//Setzt alles auf Null bzw auf den POR(Power on Reset) Wert
 	public static void reset()
 	{
 		new Laufzeit();
@@ -359,6 +364,7 @@ public class Speicher
 
 	}
 
+	//Lädt alle Register neu
 	public static void reloadArray()
 	{
 		reloadArrayRegister("status");

@@ -21,7 +21,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 
 import DateiVerarbeitung.Parser;
 import Funktionen.Functions;
@@ -32,13 +33,16 @@ import Laufzeit.Timer;
 import Laufzeit.WatchDogTimer;
 import Laufzeit.Laufzeit;
 
-public class GUI implements ActionListener {
+public class GUI  {
 
+	static String[][] fileData0 = new String[16][9];
+	static String[][] fileData1 = new String[16][9];
+	
 	static int[][] rams = FileRegister.getFReg();
 
-	static String datei = "C:\\Users\\Super\\git\\Microcontroller\\src\\LST_Files\\TPicSim1.LST";
+	static String datei = "src\\LST_Files\\TPicSim1.LST";
 	
-	static String[][] dateiLST;
+	static Object[][] dateiLST;
 
 	static JFrame frame;
 	
@@ -77,7 +81,8 @@ public class GUI implements ActionListener {
 	static JTable lstFile;
 
 	static File file;
-
+	
+	//Panels
 	JPanel buttonPanel = new JPanel();
 
 	JPanel pinAPanel = new JPanel();
@@ -122,7 +127,7 @@ public class GUI implements ActionListener {
 
 	static JLabel laufzeitValue = new JLabel(Integer.toString(Laufzeit.getLaufzeitzaehler()));
 
-	static JTextField frequenzValue = new JTextField(Integer.toString(Laufzeit.getFrequenz()));
+	static JTextField frequenzValue = new JTextField(Integer.toString(Laufzeit.getFrequenz())) ;
 
 	static JLabel timerValue = new JLabel(Integer.toString(Timer.getTimer()));
 
@@ -324,11 +329,12 @@ public class GUI implements ActionListener {
 
 	protected static JLabel RIFNumberText = new JLabel(Integer.toString(intconReg[7]));
 
-	static String[][] loadFile(String datei) { // Datei ins programm laden/einlesen
+	
+	//Liest die LST Datei ein um sie auf der GUI mit den Breakpoints anzuzeigen
+	static Object[][] loadFile(String datei) { // Datei ins programm laden/einlesen
 		File file = new File(datei);
 
-		String[][] test = new String[350][350];
-		String[][] yeet = new String[1][1];
+		Object[][] lstFile = new Object[350][350];
 		String befehlsAdresse;
 		String befehlsCode;
 		String zeilenNummer;
@@ -337,7 +343,7 @@ public class GUI implements ActionListener {
 
 		if (!file.canRead() || !file.isFile()) { // überprüfen ob Datei exisitiert
 													// und gelesen werden kann
-			return yeet;
+			return null;
 		}
 		try {
 			BufferedReader buffer = new BufferedReader(new FileReader(datei));
@@ -358,14 +364,20 @@ public class GUI implements ActionListener {
 					startEnde = zeile.substring(27, zeile.length());
 				}
 
-				test[i][1] = befehlsAdresse;
-				test[i][2] = befehlsCode;
-				test[i][3] = zeilenNummer;
-				test[i][4] = startEnde;
-				test[i][5] = kommentar;
+				//Überprüfe wo Breakpoints nötig sind
+				if (befehlsAdresse.equals("    "))
+					lstFile[i][0] = null;
+				else
+					lstFile[i][0] = (boolean) false;
+					
+				lstFile[i][1] = (String)befehlsAdresse;
+				lstFile[i][2] = (String)befehlsCode;
+				lstFile[i][3] = (String)zeilenNummer;
+				lstFile[i][4] = (String)startEnde;
+				lstFile[i][5] = (String)kommentar;
 			}
 			buffer.close();
-			return test;
+			return lstFile;
 		}
 
 		catch (FileNotFoundException e) {
@@ -373,13 +385,19 @@ public class GUI implements ActionListener {
 		} catch (IOException e) {
 			System.out.println("IO Error");
 		}
-		return yeet;
+		return null;
 	}
 
-	public static void lstFileTable() {
+	//Stoppt die GUI bei Breakpoints oder Interrupts
+	public static void stop() {
+		if (start.getText().equals("Stop")) {
+			start.doClick();
+			Reloads.ReloadAttributes();
+			Reloads.ReloadGUI();
+		}
+	}
 	
-	}
-
+	//Erstellt den Stack
 	public static void Stack() {
 		int[] tempStack = Stack.getStack();
 		String[][] stackArray = { { "0", Integer.toString(tempStack[0]) }, { "1", Integer.toString(tempStack[1]) },
@@ -391,18 +409,17 @@ public class GUI implements ActionListener {
 
 	}
 
+	//Setzt eine Null vor die Zahl falls diese nur einstellig ist 
 	public static String leadingZero(int number) {
 		return (number < 16 ? "0" : "") + Integer.toHexString(number).toUpperCase();
 	}
 
+	//Erstellt das FileRegister
 	public static void initializeFileReg() {
 		fileRegTP = null;
 		fileRegTP = new JTabbedPane();
 
 		String[] fileRegisterColum = { "", "00", "10", "20", "30", "40", "50", "60", "70" };
-
-		String[][] fileData0 = new String[16][9];
-		String[][] fileData1 = new String[16][9];
 
 		fileData0[0][0] = "";
 		fileData1[0][0] = "";
@@ -440,12 +457,39 @@ public class GUI implements ActionListener {
 			fileRegTP.repaint();
 
 	}
+	
+	//Lädt das FileRegister neu nach jedem Step
+	public static void reloadFileReg() {
+		fileData0[0][0] = "";
+		fileData1[0][0] = "";
 
+		for (int i = 0; i < fileData0.length; i++) {
+			fileData0[i][0] = leadingZero(i);
+			fileData1[i][0] = leadingZero(i);
+		}
+
+		int columnMultiplicator = 0;
+		for (int i = 0; i < rams[0].length; i++) {
+
+			fileData0[i % 16][columnMultiplicator + 1] = leadingZero(FileRegister.getBankValue(0, i));
+			fileData1[i % 16][columnMultiplicator + 1] = leadingZero(FileRegister.getBankValue(1, i));
+
+			if (i % 16 == 15 && i > 0) {
+				columnMultiplicator++;
+			}
+		}
+		
+		if (fileRegTP != null)
+			fileRegTP.repaint();
+	}
+
+	
+	//GUI Konstruktor
 	public GUI() {
 		Speicher.reset();
 		// frame();
 
-		frame = new JFrame("Pic");
+		frame = new JFrame("PIC16F84");
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -495,20 +539,7 @@ public class GUI implements ActionListener {
 		
 
 
-		wRegTitle.setBounds(0, 0, 80, 20);
-		wRegLabel.setBounds(25, 30, 20, 10);
-
-		fsr.setBounds(80, 0, 100, 20);
-		fsrValue.setBounds(90, 30, 20, 10);
-
-		pcl.setBounds(120, 0, 100, 20);
-		pclValue.setBounds(125, 30, 20, 10);
-
-		pclath.setBounds(160, 0, 100, 20);
-		pclathValue.setBounds(175, 30, 20, 10);
-
-		pcLabel.setBounds(220, 0, 100, 20);
-		pcValue.setBounds(225, 30, 20, 10);
+		
 
 		// Action listener Test
 		ActionListener actionListener = new ActionHandler();
@@ -546,7 +577,40 @@ public class GUI implements ActionListener {
 		
 		dateiLST = loadFile(datei);
 		
-		lstFile = new JTable(dateiLST, lstColumnNames);
+		lstFile = new JTable(dateiLST, lstColumnNames) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column)
+			{
+				if (getValueAt(row, column) instanceof Boolean) {
+					return true;
+				}
+				return false;
+			}
+
+			@Override
+			public TableCellRenderer getCellRenderer(int row, int column)
+			{
+				if (getValueAt(row, column) == null)
+					return super.getDefaultRenderer(String.class);
+				if (getValueAt(row, column) instanceof Boolean) {
+					return super.getDefaultRenderer(Boolean.class);
+				} else
+					return super.getCellRenderer(row, column);
+			}
+
+			@Override
+			public TableCellEditor getCellEditor(int row, int column)
+			{
+				if (getValueAt(row, column) == null)
+					return super.getDefaultEditor(String.class);
+				if (getValueAt(row, column) instanceof Boolean) {
+					return super.getDefaultEditor(Boolean.class);
+				} else
+					return super.getCellEditor(row, column);
+			}
+		};
 		
 		
 		
@@ -567,7 +631,7 @@ public class GUI implements ActionListener {
 
 		Stack();
 
-		lstFileTable();
+		
 
 		JScrollPane stackSP = new JScrollPane(stack);
 
@@ -581,7 +645,8 @@ public class GUI implements ActionListener {
 		watchDogPanel.add(watchDogON);
 		watchDogPanel.add(watchDogLabel);
 
-		watchDogON.setSelected(!WatchDogTimer.isEnabled());
+		watchDogON.setSelected(WatchDogTimer.isEnabled());
+		watchDogOFF.setSelected(!WatchDogTimer.isEnabled());
 
 		timerPanel.add(laufzeit);
 		timerPanel.add(frequenz);
@@ -590,6 +655,17 @@ public class GUI implements ActionListener {
 		timerPanel.add(watchDogTimer);
 		timerPanel.add(watchDogTimerMax);
 
+		frequenzValue.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				int textFieldValue = Integer.parseInt(frequenzValue.getText());
+				if (textFieldValue != Laufzeit.getFrequenz()) {
+					Laufzeit.setFrequenz(textFieldValue);
+					System.out.println(Laufzeit.getFrequenz());
+				}
+			}
+		});
+		
 		timerPanel.add(laufzeitValue);
 		timerPanel.add(frequenzValue);
 		timerPanel.add(timerValue);
@@ -853,8 +929,25 @@ public class GUI implements ActionListener {
 		start.setBackground(new Color(0, 120, 0));
 		load.setBackground(new Color(255, 0, 0));
 		step.setBackground(new Color(0, 255, 255));
+		
+		
+		wRegTitle.setBounds(0, 0, 80, 20);
+		wRegLabel.setBounds(25, 30, 20, 10);
 
-		bitPanel.setBorder(BorderFactory.createTitledBorder("Bit"));
+		fsr.setBounds(80, 0, 100, 20);
+		fsrValue.setBounds(87, 30, 20, 10);
+
+		pcl.setBounds(120, 0, 100, 20);
+		pclValue.setBounds(125, 30, 20, 10);
+
+		pclath.setBounds(160, 0, 100, 20);
+		pclathValue.setBounds(175, 30, 20, 10);
+
+		pcLabel.setBounds(220, 0, 100, 20);
+		pcValue.setBounds(225, 30, 25, 10);
+		
+
+		bitPanel.setBorder(BorderFactory.createTitledBorder("Bits"));
 
 		initializeFileReg();
 		frame.add(functionRegisterPanel);
@@ -887,7 +980,19 @@ public class GUI implements ActionListener {
 
 	}
 
+	//Überprüft ob ein Breakpoint aktiviert ist
+	public static boolean checkBreakpoint() {
+		Reloads.setMarker();
+		return (boolean) lstFile.getValueAt(lstFile.getSelectedRow(), 0);
+	}
+	
+	
+	//Führt einen einzelnen Schritt
 	public static void step() {
+		if (checkBreakpoint()) {
+			stop();
+			return;
+		}
 		Functions.run();
 		try {
 			Thread.sleep(20);
@@ -899,6 +1004,8 @@ public class GUI implements ActionListener {
 		Reloads.ReloadGUI();
 	}
 
+	
+	
 	public static void main(String[] args) {
 		new GUI();
 		readFile(datei);
@@ -907,6 +1014,8 @@ public class GUI implements ActionListener {
 
 	}
 
+	
+	//Liest die LST Datei ein 
 	public static void readFile(String file) {
 	
 		
@@ -918,26 +1027,10 @@ public class GUI implements ActionListener {
 			}
 		}
 		
-		
-//		for (int i = 0; i < lstFile.getRowCount(); i++) {
-//			String row = (String) lstFile.getValueAt(i, 1);
-//			if (row != null) {
-//
-//				if (!row.equals("    ")) {
-//
-//					if (Speicher.getPC() == Integer.parseInt(row, 16)) {
-//						lstFile.setValueAt(Boolean.FALSE, i, 0);
-//					}
-//				}
-//			}
-//		}
-		
 	
-		
-		
 		Speicher.reset();
 		
-		System.out.println("LST Datei: "+datei.substring(49));
+//		System.out.println("LST Datei: "+datei.substring(49));
 		
 		Reloads.ReloadGUI();
 		
@@ -947,12 +1040,6 @@ public class GUI implements ActionListener {
 		p.read();
 	}
 	
-	
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
 
 }

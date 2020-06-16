@@ -14,25 +14,18 @@ import Speicher.Stack;
 
 public class Reloads extends GUI {
 
+	// Lädt die gesamte GUI nach jedem Schritt neu
 	public static void ReloadGUI() {
-		
-		
-		
-		
-		
-		
-		
+
 		reloadStack();
 
 		reloadPins();
 
-		initializeFileReg();
+		GUI.reloadFileReg();
 
 		setMarker();
-		
+
 		reloadTimer();
-		
-		GUI.lstFileTable();
 
 		IRPNumberText.setText(Integer.toString(statusReg[0]));
 		RP1NumberText.setText(Integer.toString(statusReg[1]));
@@ -60,11 +53,11 @@ public class Reloads extends GUI {
 		TIFNumberText.setText(Integer.toString(intconReg[5]));
 		IFNumberText.setText(Integer.toString(intconReg[6]));
 		RIFNumberText.setText(Integer.toString(intconReg[7]));
-		
+
 		optionValue.setText(Integer.toHexString(rams[1][1]));
-		
+
 		statusValue.setText(Integer.toHexString(rams[1][3]));
-		
+
 		intconValue.setText(Integer.toHexString(rams[1][11]));
 
 		wRegLabel.setText(Integer.toHexString(Speicher.getwReg()));
@@ -72,14 +65,10 @@ public class Reloads extends GUI {
 		pclValue.setText(Integer.toHexString(Speicher.getPCL()));
 		pclathValue.setText(Integer.toHexString(Speicher.getPCLATH()));
 		pcValue.setText(Integer.toHexString(Speicher.getPC()));
-		
-		
-		
-		
-		
-		
+
 	}
 
+	// Lädt die Attribute(Register, ProgrammSpeicher und FileRegister) neu
 	public static void ReloadAttributes() {
 		pc = Speicher.getPC();
 		rams = FileRegister.getFReg();
@@ -89,6 +78,7 @@ public class Reloads extends GUI {
 		intconReg = Speicher.getIntconReg();
 	}
 
+	// Lädt den Stack neu
 	public static void reloadStack() {
 		int[] stackArray = Stack.getStack();
 
@@ -97,6 +87,7 @@ public class Reloads extends GUI {
 		}
 	}
 
+	// Lädt die Pins neu
 	public static void reloadPins() {
 		int[] portPinA = Speicher.getPortPinA();
 		int[] portPinB = Speicher.getPortPinB();
@@ -149,20 +140,20 @@ public class Reloads extends GUI {
 		pinRB7IO.setEnabled(pinRB7.isSelected());
 
 	}
-	
+
+	// Lädt alles für den Timer und Watchdog neu
 	public static void reloadTimer() {
-		
 
 		laufzeitValue.setText(Integer.toString(Laufzeit.getLaufzeitzaehler()));
 		frequenzValue.setText(Integer.toString(Laufzeit.getFrequenz()));
-		timerValue.setText(Integer.toString(Timer.getTimer()));
+		timerValue.setText(Integer.toString(FileRegister.getBankValue(0, 1)));
 		timerMaxValue.setText(Integer.toString(Timer.getTimerMax()));
 		watchDogTimerValue.setText(Integer.toString(WatchDogTimer.getWatchdogTimer()));
 		watchDogTimerMaxValue.setText(Integer.toString(WatchDogTimer.getMaxTime()));
 	}
 
+	// Setzt den Marker auf die Zeile mit dem nächsten Befehl
 	public static void setMarker() {
-
 
 		for (int i = 0; i < lstFile.getRowCount(); i++) {
 			String row = (String) lstFile.getValueAt(i, 1);

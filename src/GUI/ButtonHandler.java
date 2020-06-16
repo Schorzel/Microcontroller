@@ -19,6 +19,8 @@ public class ButtonHandler implements ActionListener {
 
 	Thread t;
 
+	
+	//Überprüft welcher Button gedrückt wird und führt die entsprechende Aktion aus(Start/Stop, Step oder Load)
 	@Override
 	public void actionPerformed(ActionEvent event) {
 
@@ -42,16 +44,12 @@ public class ButtonHandler implements ActionListener {
 				if (run) {
 					GUI.start.setText("Stop");
 					GUI.step.setEnabled(false);
+					GUI.load.setEnabled(false);
 					t = new Thread(() -> {
 
 						while (run) {
 							GUI.step();
-							try {
-								Thread.sleep(50);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+							
 
 						}
 					});
@@ -60,6 +58,7 @@ public class ButtonHandler implements ActionListener {
 				} else {
 					GUI.start.setText("Run");
 					GUI.step.setEnabled(true);
+					GUI.load.setEnabled(true);
 					t = null;
 				}
 			}

@@ -6,6 +6,8 @@ import Funktionen.Functions;
 
 public class Flags extends Functions {
 
+	
+	//Überprüft das Carry Flag mit Sonderfall
 	public static int checkFlagC(int value, boolean subtraktion) {
 		if (cFlag) {
 			value += 256;
@@ -19,7 +21,7 @@ public class Flags extends Functions {
 			setFlag(0, 0);
 		}
 
-		// Sonderregeln bei Subtraktionen
+		// Sonderfall bei Subtraktionen
 		if (subtraktion) {
 			if (value >= 0) {
 				setFlag(0, 1);
@@ -31,7 +33,7 @@ public class Flags extends Functions {
 		return value;
 	}
 	
-	
+	//Überprüft das Zero Flag
 	public static void checkFlagZ(int value) {
 		// Z Flag
 		if (value == 0) {
@@ -42,8 +44,8 @@ public class Flags extends Functions {
 	}
 	
 	
-	
-	public static void checkFlagDC(int valueFirst, int valueSecond) {
+	//Übeprüft das Digitcarry Flag mit Sonderfall
+	public static void checkFlagDC(int valueFirst, int valueSecond, boolean subtraktion) {
 		// DC Flag
 		valueFirst = valueFirst & 0b00001111;
 		valueSecond = valueSecond & 0b00001111;
@@ -55,13 +57,27 @@ public class Flags extends Functions {
 		} else {
 			setFlag(1, 0);
 		}
+		
+		// Sonderfall bei Subtraktionen
+		if (subtraktion) {
+			if (value >= 0) {
+				setFlag(1, 1);
+			} else {
+				setFlag(1, 0);
+			}
+		}
+		
+		
 	}
 	
+	//Überprüft das Carry und das Zero Flag
 	public static void checkFlagsCZ(int value, boolean subtraktion) {
 		value = checkFlagC(value, subtraktion);
 		checkFlagZ(value);
 	}
 	
+	
+	//Stellt die Flags ein
 	public static void setFlag(int flag, int status) {
 		int[][] rams = FileRegister.getFReg();
 

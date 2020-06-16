@@ -23,17 +23,17 @@ public class Decoder
 
 	private static final int MASK_PARAM_k_long = 0b00011111111111;
 
-	// HI
+	
 
+	//Liest die Parameter aus dem Binärcode
 	public static int decodeParameter(int index, String param)
 	{
 		int[] programmSpeicher = Speicher.getProgrammspeicher();
-		int command = programmSpeicher[index]; // Hex Code aus dem
-															// ProgrammSpeicher
+		int command = programmSpeicher[index]; 
 
 		switch (decodeCommand(index)) {
 
-		// Befehle mit Parameter 'd', 'f'
+		// Befehle die d oder f enthalten
 		case "ADDWF":
 		case "ANDWF":
 		case "COMF":
@@ -57,7 +57,7 @@ public class Decoder
 			}
 			break;
 
-		// Befehle mit Parameter 'b', 'f'
+		// Befehle die b oder f enthalten
 		case "BCF":
 		case "BSF":
 		case "BTFSC":
@@ -69,7 +69,7 @@ public class Decoder
 			}
 			break;
 
-		// Befehle mit Parameter 'k' (last 8 bits)
+		// Befehle die k enthalten (die letzten 8 bits)
 		case "ADDLW":
 		case "ANDLW":
 		case "IORLW":
@@ -80,7 +80,7 @@ public class Decoder
 		case "XORLW":
 			return (command & (MASK_FIRST_7 ^ MASK_7));
 
-		// Befehle mit Parameter 'k' (last 11 bits)
+		// Befehle die k enthalten (die letzten 11 bits)
 		case "CALL":
 		case "GOTO":
 			return (command & MASK_PARAM_k_long);
@@ -88,6 +88,7 @@ public class Decoder
 		return 0; // Fehler oder NOP
 	}
 
+	//Aktueller "Command" wird mit allen Bitmasken verglichen um den Befehel rauszufinden
 	public static String decodeCommand(int index)
 	{
 

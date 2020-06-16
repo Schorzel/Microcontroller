@@ -5,11 +5,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JCheckBox;
 
+import Laufzeit.Interrupt;
+import Laufzeit.Timer;
+import Speicher.FileRegister;
 import Speicher.Speicher;
 
 public class ActionHandler implements ActionListener
 {
 
+	
+	//Überprüft ob eine Checkbox angehackt oder nicht angehackt wird und ändert den dazugehörigen Pin und ob gegebenenfalls ein Interrupt ausgelöst wird
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
@@ -170,14 +175,21 @@ public class ActionHandler implements ActionListener
 				Speicher.setPinsIO(0, 3, 0);
 				System.out.println("Pins: " + pins[3]);
 				System.out.println("IO: " + pinsIO[3]);
+				
+				if (Timer.getT0CS() == 1) {
+					Timer.incTimer();
+					Reloads.ReloadAttributes();
+					Reloads.ReloadGUI();
+				}
 			}
+			
+			
 		}
 
 		if (checkbox == GUI.pinRB0) {
 			if (checkbox.isSelected()) {
 				Speicher.setPins(1, 7, 1);
 				GUI.pinRB0IO.setEnabled(true);
-
 				System.out.println("Pins: " + pins[7]);
 				System.out.println("IO: " + pinsIO[7]);
 			}
@@ -196,11 +208,13 @@ public class ActionHandler implements ActionListener
 				Speicher.setPinsIO(1, 7, 1);
 				System.out.println("Pins: " + pins[7]);
 				System.out.println("IO: " + pinsIO[7]);
+				checkRB0Int(0);
 			}
 			if (!checkbox.isSelected()) {
 				Speicher.setPinsIO(1, 7, 0);
 				System.out.println("Pins: " + pins[7]);
 				System.out.println("IO: " + pinsIO[7]);
+				checkRB0Int(1);
 			}
 		}
 
@@ -312,9 +326,9 @@ public class ActionHandler implements ActionListener
 				GUI.pinRB4IO.setEnabled(false);
 				System.out.println("Pins: " + pins[0]);
 				System.out.println("IO: " + pinsIO[0]);
-
 			}
 		}
+		
 		if (checkbox == GUI.pinRB4IO) {
 			if (checkbox.isSelected()) {
 				Speicher.setPinsIO(1, 3, 1);
@@ -326,6 +340,9 @@ public class ActionHandler implements ActionListener
 				System.out.println("Pins: " + pins[0]);
 				System.out.println("IO: " + pinsIO[0]);
 			}
+			
+			FileRegister.setDataInBank(11, FileRegister.getBankValue(1, 11) | 0b00000001); // RBIF setzen
+			new Interrupt("RB4-7");
 		}
 
 		if (checkbox == GUI.pinRB5) {
@@ -357,6 +374,8 @@ public class ActionHandler implements ActionListener
 				System.out.println("Pins: " + pins[0]);
 				System.out.println("IO: " + pinsIO[0]);
 			}
+			FileRegister.setDataInBank(11, FileRegister.getBankValue(1, 11) | 0b00000001); // RBIF setzen
+			new Interrupt("RB4-7");
 		}
 
 		if (checkbox == GUI.pinRB6) {
@@ -388,6 +407,8 @@ public class ActionHandler implements ActionListener
 				System.out.println("Pins: " + pins[0]);
 				System.out.println("IO: " + pinsIO[0]);
 			}
+			FileRegister.setDataInBank(11, FileRegister.getBankValue(1, 11) | 0b00000001); // RBIF setzen
+			new Interrupt("RB4-7");
 		}
 
 		if (checkbox == GUI.pinRB7) {
@@ -418,6 +439,31 @@ public class ActionHandler implements ActionListener
 				Speicher.setPinsIO(1, 0, 0);
 				System.out.println("Pins: " + pins[0]);
 				System.out.println("IO: " + pinsIO[0]);
+			}
+			FileRegister.setDataInBank(11, FileRegister.getBankValue(1, 11) | 0b00000001); // RBIF setzen
+			new Interrupt("RB4-7");
+		}
+		
+		Reloads.ReloadAttributes();
+		Reloads.ReloadGUI();
+		
+	}
+	
+	//Überprüft den RB0 Pin und löst gegebenfalls ein Interrupt aus
+	private void checkRB0Int(int value) {
+		if ((FileRegister.getBankValue(1, 1) & 0b01000000) == 0b01000000) {
+			if (value == 0) {
+				FileRegister.setDataInBank(11, FileRegister.getBankValue(1, 11) | 0b00000010);
+				new Interrupt("RB0");
+			} else {
+				//FileRegister.setDataInBank(11, FileRegister.getBankValue(1, 11) & 0b11111101);
+			}
+		} else {
+			if (value == 1) {
+				FileRegister.setDataInBank(11, FileRegister.getBankValue(1, 11) | 0b00000010);
+				new Interrupt("RB0");
+			} else {
+				//FileRegister.setDataInBank(11, FileRegister.getBankValue(1, 11) & 0b11111101);
 			}
 		}
 	}

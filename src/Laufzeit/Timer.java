@@ -40,6 +40,7 @@ public class Timer {
 	
 	public static void setTimer(int timer) {
 		Timer.timer = timer;
+		vorteilsTimer = 0;
 	}
 	
 	public static void setTimerMax(int timerMax) {
@@ -75,8 +76,6 @@ public class Timer {
 		vorteilsTimer += 4 / Laufzeit.getFrequenz();
 
 		if (vorteilsTimer >= prs) {
-			
-			vorteilsTimer = 0;
 			timer += 4 / Laufzeit.getFrequenz();
 			checkOverflow();
 			FileRegister.setDataInBank(0, 1, timer);
@@ -86,10 +85,9 @@ public class Timer {
 
 	public static void checkOverflow() {
 		if (timer > 255) {
-			int INTCON = FileRegister.getBankValue(0, 11);
-			INTCON |= 1 << 2;
-			FileRegister.setDataInBank(11, INTCON);
+			timer = 0;
 			// Interrupt
+			new Interrupt("TMR0");
 		}
 	}
 }

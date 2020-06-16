@@ -11,14 +11,17 @@ import java.io.IOException;
 public class Parser {
 	private String file;
 
+	//Gibt die Datei als String zurück
 	public String getFile() {
 		return file;
 	}
 	
+	//Stellt aktuelle Datei ein
 	public void setFile(String file) {
 		this.file = file;
 	}
 
+	//Liesst die Datei ein und zieht die wichtigen Informationen raus
 	public void read() {
 		Speicher.reset();
 		String line;
@@ -30,7 +33,7 @@ public class Parser {
 			
 			while ((line = bufferedReader.readLine()) != null) {
 				
-				if (line.substring(0, 1).equals(" ")) { // Wenn die erste Stelle ein Leerzeichen ist ï¿½berspringe die Zeile
+				if (line.substring(0, 1).equals(" ")) { // Wenn die erste Stelle ein Leerzeichen ist überspringe die Zeile
 					
 					continue;
 				} else {

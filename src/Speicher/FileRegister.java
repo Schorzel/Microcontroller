@@ -1,5 +1,6 @@
 package Speicher;
 
+import Laufzeit.Timer;
 import Speicher.FileRegister;
 import Speicher.Speicher;
 
@@ -26,6 +27,7 @@ public class FileRegister {
 		return fileReg;
 	}
 
+	//Holt den Wert aus der angegebenen Bank und an dem entsprechenden Index
 	public static int getBankValue(int bank, int index) {
 		int value;
 		if (bank == 0) {
@@ -41,11 +43,16 @@ public class FileRegister {
 		return value;
 	}
 	
+	//Speichert einen Wert in der angegebenen Bank an dem entsprechenden Index
 	public static void setDataInBank(int bank,int index,int data) {
 		if(index < 0x50) {
 			if (bank == 0) {
 				bank0[index] = data;
-
+				
+				if (index == 1) {
+					Timer.setTimer(data);
+				}
+				
 			} else if (bank == 1) {
 				bank1[index] = data;
 
@@ -70,9 +77,9 @@ public class FileRegister {
 		Speicher.reloadArray();
 	}
 	
+	//Speichert einen Wert in beiden Bänken an dem entsprechenden Index
 	public static void setDataInBank(int index,int data) {
 		setDataInBank(0,index,data);
 		setDataInBank(1,index,data);
 	}
-
 }

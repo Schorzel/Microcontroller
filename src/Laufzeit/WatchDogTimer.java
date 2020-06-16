@@ -16,6 +16,8 @@ public class WatchDogTimer
 
 	private static int psa; // Prescaler Assignment bit
 
+	
+	//Setzt das WatchDogTimer Maximum standardmäßig auf 18000
 	public WatchDogTimer()
 	{
 		watchdogTimer = 0;
@@ -32,11 +34,12 @@ public class WatchDogTimer
 		return enabled;
 	}
 
+	
 	public static void increaseTimer()
 	{
-		if (!enabled) {
-			watchdogTimer += 4 / Laufzeit.getFrequenz(); // watchdogTimer + (4 /
-																		// Quarzfrequenz (4MHz))
+		if (enabled) {
+			watchdogTimer += 4 / Laufzeit.getFrequenz(); // watchdogTimer + (4 / Quarzfrequenz (4MHz))
+																		
 			checkMaxTime();
 		}
 	}
@@ -62,7 +65,7 @@ public class WatchDogTimer
 		watchdogTimer = 0;
 	}
 
-	// Überprüft ob die maximale Zeit überschritten ist
+	// Überprüft ob die maximale Zeit überschritten ist falls dies der Fall ist wird ein Watchdogtimer Reset ausgeführt
 	public static void checkMaxTime()
 	{
 
@@ -78,6 +81,7 @@ public class WatchDogTimer
 		
 	}
 
+	
 	private static void setPRS()
 	{
 		int option = FileRegister.getBankValue(1, 1);

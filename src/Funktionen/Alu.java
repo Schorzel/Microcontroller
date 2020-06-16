@@ -15,22 +15,22 @@ public class Alu extends Functions {
 	
 	
 	//ALU Methode welche alle arithemetischen Funktionen abdeckt
-	//p1 = 1. Rechenoperand,w=2.Rechenoperand,d = Paramater d des Befehlscode(Bit7),f== param.f befehscode(6-0),op=operator;
-	public static int ALU(int p1,int w,int d,int f, String op) {
+	//v1 = 1. Wert, v2 = 2. Wert, d = Parameter des Befehlscode(Bit7), f = parameter des befehscode(6-0),op=Rechenoperator;
+	public static int ALU(int v1,int v2,int d,int f, String op) {
 		
 		int value = 0;
 		 if (op.equals("&")) {
-	            value = w & p1;
+	            value = v2 & v1;
 	        } else if (op.equals("|")) { //OR
-	            value = w | p1;
+	            value = v2 | v1;
 	        } else if (op.equals("^")) { //XOR
-	            value = w ^ p1;
+	            value = v2 ^ v1;
 	        } else if (op.equals("+")) {
-	            value = w + p1;
+	            value = v2 + v1;
 	        } else if (op.equals("-")) {
-	            value = p1 + zweierKomp(w);
+	            value = v1 + zweierKomp(v2);
 	        } else {
-	            value = p1;
+	            value = v1;
 	        }
 	 
 	        if (value > 255) {
@@ -43,9 +43,9 @@ public class Alu extends Functions {
 	        return value;
 	    }
 	
-	
-	public static int ALU(int p1, int d, int f, String op) {
-		return ALU(p1, Speicher.getwReg(), d, f, op);
+	//Berechnung mit dem W-Register
+	public static int ALU(int v1, int d, int f, String op) {
+		return ALU(v1, Speicher.getwReg(), d, f, op);
 	}
 	
 	

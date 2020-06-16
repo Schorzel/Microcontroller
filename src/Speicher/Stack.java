@@ -6,6 +6,7 @@ public class Stack {
 	private static int stackPointer;
 	
 	
+	//Füllt den Stack mit Nullen
 	public Stack() {
 		for (int i = 0; i < stack.length; i++) {
 			stack[i] = 0;
@@ -29,6 +30,7 @@ public class Stack {
 	}
 	
 	
+	//Da der Stack nur 8 Stellen hat fängt dieser von vorne an wenn das Maximum von 8 erreicht ist
 	public static void setStack(int data) {
 		stack[stackPointer] = data;
 		if (stackPointer == 7) {

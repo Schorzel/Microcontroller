@@ -14,7 +14,7 @@ public class Reset
 
 	private static int[] intcon;
 
-	// Tabelle auf Datenblatt S.43
+	//Setzt die Werte auf die Eingangswerte wenn der Microcontroller eingeschalten wird 
 	public static void POR()
 	{
 		FileRegister.setDataInBank(2, 0b0000); // PCL
@@ -32,6 +32,7 @@ public class Reset
 		Speicher.reload();
 	}
 
+	
 	public static void normalReset()
 	{
 		FileRegister.setDataInBank(2, 0b0000); // PCL
@@ -48,28 +49,29 @@ public class Reset
 
 	}
 
+	//Reset bei einem Sleep
 	public static void sleepReset()
 	{
-		// FileRegister.setDataInBank(2, Speicher.getPC() + 1);
-		FileRegister.setDataInBank(1, 8,
-				FileRegister.getBankValue(1, 8) & 0b00001111); // EECON1
+		//FileRegister.setDataInBank(2, Speicher.getPC() + 1);
+		//Speicher.setPC(Speicher.getPC()+1);
+		FileRegister.setDataInBank(1, 8, FileRegister.getBankValue(1, 8) & 0b00001111); // EECON1
 	}
 
+	//Reset des Microcontrollers
 	public static void MCLR()
 	{
 		normalReset();
 		if (Functions.isSleep()) {
-			FileRegister.setDataInBank(3,
-					(FileRegister.getBankValue(0, 3) & 0b00000111) | 0b00010000); // Status
+			FileRegister.setDataInBank(3, (FileRegister.getBankValue(0, 3) & 0b00000111) | 0b00010000); // Status
 		} else {
-			FileRegister.setDataInBank(3,
-					FileRegister.getBankValue(0, 3) & 0b00011111); // Status
+			FileRegister.setDataInBank(3, FileRegister.getBankValue(0, 3) & 0b00011111); // Status
 		}
 		Speicher.setPC(0);
 
 		Speicher.reload();
 	}
 
+	//Lädt das Status, Option und Intcon Register neu
 	public static void reloadRegister()
 	{
 		status = Speicher.getStatusRegister();
@@ -77,15 +79,16 @@ public class Reset
 		intcon = Speicher.getIntconReg();
 	}
 
+	//Falls ein Reset durch den Watchdogtimer ausgelöst wird. Falls Sleep true ist wird die "sleepReset" Methode aufgerufen andernfalls wird die "normalReset" Methode aufgerufen
 	public static void WDTReset()
 	{
+		GUI.GUI.stop();
 		WatchDogTimer.resetTimer();
 
 		if (Functions.isSleep()) {
 			Functions.setSleep(false);
 			sleepReset();
-			FileRegister.setDataInBank(3,
-					FileRegister.getBankValue(0, 3) & 0b11100111);
+			FileRegister.setDataInBank(3, FileRegister.getBankValue(0, 3) & 0b11100111);
 			// Speicher.setPC(Speicher.getPC() + 1);
 		} else {
 			normalReset();
@@ -96,6 +99,7 @@ public class Reset
 
 	}
 
+	//Führt einen Sleep Reset durch und überprüft ob es ein "Wake-Up from Sleep" ist wenn das der Fall ist, wird überprüft ob das GIE bit gesetzt ist falls ja wird der PC auf 4 gesetzt
 	public static void Interrupt()
 	{
 		sleepReset();
