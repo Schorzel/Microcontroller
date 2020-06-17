@@ -37,10 +37,9 @@ public class Reset
 	{
 		FileRegister.setDataInBank(2, 0b0000); // PCL
 		// FileRegister.setData(3, FileRegister.getValueAt(0, 3) & 0b00000111); //
-		// Status Verstehen wir noch nicht
 		FileRegister.setDataInBank(10, 0b00000000); // PCLATH
 		FileRegister.setDataInBank(11,
-				FileRegister.getBankValue(0, 11) & 0b00000001); // INTCON
+		FileRegister.getBankValue(0, 11) & 0b00000001); // INTCON
 
 		FileRegister.setDataInBank(1, 1, 0b11111111); // Option_Reg
 		FileRegister.setDataInBank(1, 5, 0b00011111); // TRISA

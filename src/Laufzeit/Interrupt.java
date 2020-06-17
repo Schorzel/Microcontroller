@@ -49,7 +49,7 @@ public class Interrupt {
 		}
 	}
 
-	// Ruft die Service Routine auf, speichert den Return wert auf dem Stack und setzt den Programmzähler auf 4
+	// Ruft die Service Routine auf, speichert den Programmcounter auf dem Stack und setzt den Programmzähler auf 4
 	public void callServiceRoutine() {
 		GUI.stop();
 		FileRegister.setDataInBank(11, FileRegister.getBankValue(0, 11) & 0b01111111); // GIE Bit sperren

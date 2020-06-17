@@ -33,22 +33,22 @@ import Laufzeit.Timer;
 import Laufzeit.WatchDogTimer;
 import Laufzeit.Laufzeit;
 
-public class GUI  {
+public class GUI {
 
 	static String[][] fileData0 = new String[16][9];
 	static String[][] fileData1 = new String[16][9];
-	
+
 	static int[][] rams = FileRegister.getFReg();
 
 	static String datei = "src\\LST_Files\\TPicSim1.LST";
-	
+
 	static Object[][] dateiLST;
 
 	static JFrame frame;
-	
+
 	static Parser parser;
 
-	static String[] lstColumnNames = { "BP","Adresse", "Code", "Zeile", "Start/Ende", "Kommentar" };
+	static String[] lstColumnNames = { "BP", "Adresse", "Code", "Zeile", "Start/Ende", "Kommentar" };
 
 	static JLabel wRegLabel;
 
@@ -81,8 +81,8 @@ public class GUI  {
 	static JTable lstFile;
 
 	static File file;
-	
-	//Panels
+
+	// Panels
 	JPanel buttonPanel = new JPanel();
 
 	JPanel pinAPanel = new JPanel();
@@ -127,7 +127,7 @@ public class GUI  {
 
 	static JLabel laufzeitValue = new JLabel(Integer.toString(Laufzeit.getLaufzeitzaehler()));
 
-	static JTextField frequenzValue = new JTextField(Integer.toString(Laufzeit.getFrequenz())) ;
+	static JTextField frequenzValue = new JTextField(Integer.toString(Laufzeit.getFrequenz()));
 
 	static JLabel timerValue = new JLabel(Integer.toString(Timer.getTimer()));
 
@@ -201,6 +201,8 @@ public class GUI  {
 	static JButton load = new JButton("Load");
 
 	static JButton step = new JButton("Step");
+
+	static JButton reset = new JButton("Reset");
 
 	// FileRegister
 	static JTable fileRegister0;
@@ -329,8 +331,7 @@ public class GUI  {
 
 	protected static JLabel RIFNumberText = new JLabel(Integer.toString(intconReg[7]));
 
-	
-	//Liest die LST Datei ein um sie auf der GUI mit den Breakpoints anzuzeigen
+	// Liest die LST Datei ein um sie auf der GUI mit den Breakpoints anzuzeigen
 	static Object[][] loadFile(String datei) { // Datei ins programm laden/einlesen
 		File file = new File(datei);
 
@@ -364,17 +365,17 @@ public class GUI  {
 					startEnde = zeile.substring(27, zeile.length());
 				}
 
-				//Überprüfe wo Breakpoints nötig sind
+				// Überprüfe wo Breakpoints nötig sind
 				if (befehlsAdresse.equals("    "))
 					lstFile[i][0] = null;
 				else
 					lstFile[i][0] = (boolean) false;
-					
-				lstFile[i][1] = (String)befehlsAdresse;
-				lstFile[i][2] = (String)befehlsCode;
-				lstFile[i][3] = (String)zeilenNummer;
-				lstFile[i][4] = (String)startEnde;
-				lstFile[i][5] = (String)kommentar;
+
+				lstFile[i][1] = (String) befehlsAdresse;
+				lstFile[i][2] = (String) befehlsCode;
+				lstFile[i][3] = (String) zeilenNummer;
+				lstFile[i][4] = (String) startEnde;
+				lstFile[i][5] = (String) kommentar;
 			}
 			buffer.close();
 			return lstFile;
@@ -388,16 +389,16 @@ public class GUI  {
 		return null;
 	}
 
-	//Stoppt die GUI bei Breakpoints oder Interrupts
+	// Stoppt die GUI bei Breakpoints oder Interrupts
 	public static void stop() {
 		if (start.getText().equals("Stop")) {
 			start.doClick();
-			Reloads.ReloadAttributes();
+
 			Reloads.ReloadGUI();
 		}
 	}
-	
-	//Erstellt den Stack
+
+	// Erstellt den Stack
 	public static void Stack() {
 		int[] tempStack = Stack.getStack();
 		String[][] stackArray = { { "0", Integer.toString(tempStack[0]) }, { "1", Integer.toString(tempStack[1]) },
@@ -409,12 +410,12 @@ public class GUI  {
 
 	}
 
-	//Setzt eine Null vor die Zahl falls diese nur einstellig ist 
+	// Setzt eine Null vor die Zahl falls diese nur einstellig ist
 	public static String leadingZero(int number) {
 		return (number < 16 ? "0" : "") + Integer.toHexString(number).toUpperCase();
 	}
 
-	//Erstellt das FileRegister
+	// Erstellt das FileRegister
 	public static void initializeFileReg() {
 		fileRegTP = null;
 		fileRegTP = new JTabbedPane();
@@ -457,8 +458,8 @@ public class GUI  {
 			fileRegTP.repaint();
 
 	}
-	
-	//Lädt das FileRegister neu nach jedem Step
+
+	// Lädt das FileRegister neu nach jedem Step
 	public static void reloadFileReg() {
 		fileData0[0][0] = "";
 		fileData1[0][0] = "";
@@ -478,13 +479,12 @@ public class GUI  {
 				columnMultiplicator++;
 			}
 		}
-		
+
 		if (fileRegTP != null)
 			fileRegTP.repaint();
 	}
 
-	
-	//GUI Konstruktor
+	// GUI Konstruktor
 	public GUI() {
 		Speicher.reset();
 		// frame();
@@ -535,11 +535,6 @@ public class GUI  {
 		functionRegisterPanel.add(pcValue);
 		functionRegisterPanel.add(wRegTitle);
 		functionRegisterPanel.add(wRegLabel);
-		
-		
-
-
-		
 
 		// Action listener Test
 		ActionListener actionListener = new ActionHandler();
@@ -574,15 +569,14 @@ public class GUI  {
 		pinRB7IO.addActionListener(actionListener);
 
 		// JTable
-		
+
 		dateiLST = loadFile(datei);
-		
+
 		lstFile = new JTable(dateiLST, lstColumnNames) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public boolean isCellEditable(int row, int column)
-			{
+			public boolean isCellEditable(int row, int column) {
 				if (getValueAt(row, column) instanceof Boolean) {
 					return true;
 				}
@@ -590,8 +584,7 @@ public class GUI  {
 			}
 
 			@Override
-			public TableCellRenderer getCellRenderer(int row, int column)
-			{
+			public TableCellRenderer getCellRenderer(int row, int column) {
 				if (getValueAt(row, column) == null)
 					return super.getDefaultRenderer(String.class);
 				if (getValueAt(row, column) instanceof Boolean) {
@@ -601,8 +594,7 @@ public class GUI  {
 			}
 
 			@Override
-			public TableCellEditor getCellEditor(int row, int column)
-			{
+			public TableCellEditor getCellEditor(int row, int column) {
 				if (getValueAt(row, column) == null)
 					return super.getDefaultEditor(String.class);
 				if (getValueAt(row, column) instanceof Boolean) {
@@ -611,10 +603,9 @@ public class GUI  {
 					return super.getCellEditor(row, column);
 			}
 		};
-		
-		
-		
-		
+
+		// System.setErr(null);
+
 		lstFile.getColumnModel().getColumn(1).setPreferredWidth(55);
 		lstFile.getColumnModel().getColumn(2).setPreferredWidth(50);
 		lstFile.getColumnModel().getColumn(3).setPreferredWidth(50);
@@ -623,15 +614,11 @@ public class GUI  {
 		// lstFile.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		lstFile.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
-
 		// lstFile.setBounds(0,0,700,600);
-
 
 		// Column Names
 
 		Stack();
-
-		
 
 		JScrollPane stackSP = new JScrollPane(stack);
 
@@ -656,8 +643,7 @@ public class GUI  {
 		timerPanel.add(watchDogTimerMax);
 
 		frequenzValue.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
+			public void actionPerformed(ActionEvent e) {
 				int textFieldValue = Integer.parseInt(frequenzValue.getText());
 				if (textFieldValue != Laufzeit.getFrequenz()) {
 					Laufzeit.setFrequenz(textFieldValue);
@@ -665,7 +651,7 @@ public class GUI  {
 				}
 			}
 		});
-		
+
 		timerPanel.add(laufzeitValue);
 		timerPanel.add(frequenzValue);
 		timerPanel.add(timerValue);
@@ -681,10 +667,12 @@ public class GUI  {
 		buttonPanel.add(start);
 		buttonPanel.add(load);
 		buttonPanel.add(step);
+		buttonPanel.add(reset);
 
 		start.addActionListener(buttonListener);
 		load.addActionListener(buttonListener);
 		step.addActionListener(buttonListener);
+		reset.addActionListener(buttonListener);
 
 		// Adding to pinPanel
 		pinAPanel.add(pinRA0);
@@ -788,15 +776,16 @@ public class GUI  {
 		portATextIO.setBounds(210, 5, 50, 30);
 		portBTextIO.setBounds(330, 5, 50, 30);
 
-		buttonPanel.setBounds(10, 30, 80, 150);
+		buttonPanel.setBounds(10, 20, 80, 160);
 		pinAPanel.setBounds(150, 30, 110, 170);
 		pinBPanel.setBounds(270, 30, 110, 170);
 
 		watchDogPanel.setBounds(750, 210, 100, 100);
 
-		start.setBounds(0, 0, 80, 50);
-		load.setBounds(0, 50, 80, 50);
-		step.setBounds(0, 100, 80, 50);
+		start.setBounds(0, 0, 80, 40);
+		load.setBounds(0, 40, 80, 40);
+		step.setBounds(0, 80, 80, 40);
+		reset.setBounds(0, 120, 80, 40);
 
 		pinRA0.setBounds(0, 0, 50, 20);
 		pinRA1.setBounds(0, 20, 50, 20);
@@ -929,8 +918,7 @@ public class GUI  {
 		start.setBackground(new Color(0, 120, 0));
 		load.setBackground(new Color(255, 0, 0));
 		step.setBackground(new Color(0, 255, 255));
-		
-		
+
 		wRegTitle.setBounds(0, 0, 80, 20);
 		wRegLabel.setBounds(25, 30, 20, 10);
 
@@ -945,7 +933,6 @@ public class GUI  {
 
 		pcLabel.setBounds(220, 0, 100, 20);
 		pcValue.setBounds(225, 30, 25, 10);
-		
 
 		bitPanel.setBorder(BorderFactory.createTitledBorder("Bits"));
 
@@ -980,14 +967,21 @@ public class GUI  {
 
 	}
 
-	//Überprüft ob ein Breakpoint aktiviert ist
+	// Überprüft ob ein Breakpoint aktiviert ist
 	public static boolean checkBreakpoint() {
 		Reloads.setMarker();
 		return (boolean) lstFile.getValueAt(lstFile.getSelectedRow(), 0);
 	}
 	
-	
-	//Führt einen einzelnen Schritt
+	public static void resetBreakpoints() {
+		for (int i = 0; i < dateiLST.length; i++) {
+			for (int j = 0; j < 6; j++) {
+				lstFile.setValueAt(dateiLST[i][j], i, j);
+			}
+		}
+	}
+
+	// Führt einen einzelnen Schritt
 	public static void step() {
 		if (checkBreakpoint()) {
 			stop();
@@ -1000,46 +994,39 @@ public class GUI  {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Reloads.ReloadAttributes();
+
 		Reloads.ReloadGUI();
 	}
 
-	
-	
 	public static void main(String[] args) {
 		new GUI();
 		readFile(datei);
-		Reloads.ReloadAttributes();
+		// Reloads.ReloadAttributes();
 		Reloads.ReloadGUI();
 
 	}
 
-	
-	//Liest die LST Datei ein 
+	// Liest die LST Datei ein
 	public static void readFile(String file) {
-	
-		
+
 		dateiLST = loadFile(datei);
-		
-		for(int i = 0;i < dateiLST.length; i++) {
-			for(int j = 0;j < 6; j++) {
-				lstFile.setValueAt(dateiLST[i][j], i, j);
-			}
-		}
-		
-	
+
+		resetBreakpoints();
+
 		Speicher.reset();
-		
+
 //		System.out.println("LST Datei: "+datei.substring(49));
 		
+		Functions.setSleep(false);
+
 		Reloads.ReloadGUI();
-		
+
+		watchDogOFF.setSelected(true);
+
 		lstFile.repaint();
 		Parser p = new Parser();
 		p.setFile(datei);
 		p.read();
 	}
-	
-
 
 }

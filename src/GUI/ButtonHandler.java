@@ -10,6 +10,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTable;
 
 import DateiVerarbeitung.Parser;
+import Funktionen.Functions;
+import Laufzeit.Reset;
 import Laufzeit.WatchDogTimer;
 import Speicher.Speicher;
 
@@ -75,15 +77,23 @@ public class ButtonHandler implements ActionListener {
 					GUI.datei = (fc.getSelectedFile().getAbsolutePath());
 					
 					GUI.readFile(fc.getSelectedFile().getPath());
-					
-					
-					
-				
-
-					
-					
-					
+		
 				}
+			}
+			if(button == GUI.reset) {
+				Functions.setSleep(false);
+				GUI.stop();
+				Reset.MCLR();
+				Speicher.reset();
+				GUI.resetBreakpoints();
+				GUI.watchDogOFF.setSelected(true);
+				Reloads.ReloadGUI();
+				GUI.lstFile.repaint();
+				Parser p = new Parser();
+				p.setFile(GUI.datei);
+				p.read();
+				
+				
 			}
 		}
 	}

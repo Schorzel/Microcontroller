@@ -17,6 +17,8 @@ public class Reloads extends GUI {
 	// Lädt die gesamte GUI nach jedem Schritt neu
 	public static void ReloadGUI() {
 
+		ReloadAttributes();
+		
 		reloadStack();
 
 		reloadPins();
@@ -26,6 +28,8 @@ public class Reloads extends GUI {
 		setMarker();
 
 		reloadTimer();
+		
+		
 
 		IRPNumberText.setText(Integer.toString(statusReg[0]));
 		RP1NumberText.setText(Integer.toString(statusReg[1]));

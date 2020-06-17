@@ -20,8 +20,7 @@ public class FileRegister {
 	
 		
 	
-	// Aus den zwei Bänken wird ein zweidimensionales Array welches den RAM-Speicher
-	// darstellt
+	// Aus den zwei Bänken wird ein zweidimensionales Array 
 	public static int[][] getFReg() {
 		int[][] fileReg = { bank0, bank1 };
 		return fileReg;

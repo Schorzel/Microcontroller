@@ -44,7 +44,7 @@ public class Flags extends Functions {
 	}
 	
 	
-	//Übeprüft das Digitcarry Flag mit Sonderfall
+	//Übeprüft das Digitcarry Flag 
 	public static void checkFlagDC(int valueFirst, int valueSecond, boolean subtraktion) {
 		// DC Flag
 		valueFirst = valueFirst & 0b00001111;
@@ -58,14 +58,7 @@ public class Flags extends Functions {
 			setFlag(1, 0);
 		}
 		
-		// Sonderfall bei Subtraktionen
-		if (subtraktion) {
-			if (value >= 0) {
-				setFlag(1, 1);
-			} else {
-				setFlag(1, 0);
-			}
-		}
+
 		
 		
 	}
